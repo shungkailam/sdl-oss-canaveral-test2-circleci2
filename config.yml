@@ -81,16 +81,6 @@ jobs:
         command: python -m canaveral_build_tools.core.dependency_setup
         environment:
           PYENV_VERSION: canaveral_build
-    - run:  # Remove if not used
-        name: Setup Build System Deprecated Hooks Only
-        command: python -m canaveral_build_tools.core.setup_build_system
-        environment:
-          PYENV_VERSION: canaveral_build
-    - run:  # Remove if not used
-        name: Setup Package Tools Deprecated Hooks Only
-        command: python -m canaveral_build_tools.core.setup_package_tools
-        environment:
-          PYENV_VERSION: canaveral_build
     - run:
         name: Database Setup
         command: python -m canaveral_build_tools.core.setup_database
