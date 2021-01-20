@@ -119,7 +119,7 @@ jobs:
     - run:
         name: test--post custom command
         command: |
-          if [[ $CIRCLE_BRANCH == "master" ]]; then
+          if [[ $CIRCLE_BRANCH == "oss-demo" ]]; then
             canaveral/core/scripts/blackduck_scan.sh
           fi
     - store_test_results:
