@@ -124,7 +124,7 @@ jobs:
     - run:
         name: test--post custom command
         command: |
-          if [[ $CIRCLE_BRANCH == "master" ]]; then
+          if [[ $CIRCLE_BRANCH == "oss-demo" ]]; then
             python -m canaveral_build_tools.tools.blackduck_scan
           fi
         environment:
