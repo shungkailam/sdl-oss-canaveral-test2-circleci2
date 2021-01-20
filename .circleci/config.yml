@@ -60,6 +60,11 @@ jobs:
         environment:
           PYENV_VERSION: canaveral_build
     - run:
+        name: Install java
+        command: |-
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends openjdk-8-jdk
+    - run:
         name: Install node
         command: |-
           CODENAME=$(lsb_release -cs)
@@ -119,9 +124,11 @@ jobs:
     - run:
         name: test--post custom command
         command: |
-          if [[ $CIRCLE_BRANCH == "oss-demo" ]]; then
-            canaveral/core/scripts/blackduck_scan.sh
+          if [[ $CIRCLE_BRANCH == "master" ]]; then
+            python -m canaveral_build_tools.tools.blackduck_scan
           fi
+        environment:
+          PYENV_VERSION: canaveral_build
     - store_test_results:
         path: test-results
     - store_artifacts:
