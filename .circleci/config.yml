@@ -65,6 +65,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends openjdk-8-jdk
     - run:
+        name: Install go BT
+        command: python -m canaveral_build_tools.core.build
+        environment:
+          PYENV_VERSION: canaveral_build
+          CANAVERAL_BUILD_SYSTEM: golang
+    - run:
         name: Install node
         command: |-
           CODENAME=$(lsb_release -cs)
@@ -157,12 +163,6 @@ jobs:
         environment:
           PYENV_VERSION: canaveral_build
           TAG_FILTER: /(?:(v[0-9]\.[0-9]\.[0-9]))/
-    - run:
-        name: Run Go build part
-        command: python -m canaveral_build_tools.core.build
-        environment:
-          PYENV_VERSION: canaveral_build
-          CANAVERAL_BUILD_SYSTEM: golang
     - store_artifacts:
         name: Archive build logs
         path: /tmp/canaveral_logs
