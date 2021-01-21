@@ -12,7 +12,7 @@ jobs:
       NPM_SERVICE_DIR: services
       NPM_REGISTRY: http://drt-ep-artifactory-dev-1.eng.nutanix.com:8081/artifactory/api/npm/canaveral-npm-virtual/
       JAVA_HOME: /usr/lib/jvm/java-8-openjdk-amd64
-      CANAVERAL_BUILD_SYSTEM: noop
+      CANAVERAL_BUILD_SYSTEM: golang
       CANAVERAL_PACKAGE_TOOLS: npm
       ENABLE_SECURITY_SCAN: 1
       BLACKDUCK_TARGET_SOURCE_PATH: 1
@@ -64,12 +64,6 @@ jobs:
         command: |-
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends openjdk-8-jdk
-    - run:
-        name: Install go BT
-        command: python -m canaveral_build_tools.core.build
-        environment:
-          PYENV_VERSION: canaveral_build
-          CANAVERAL_BUILD_SYSTEM: golang
     - run:
         name: Install node
         command: |-
