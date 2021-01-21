@@ -1,0 +1,249 @@
+.datastream-container{
+  min-height: 100vh;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #fff;
+  font-size: 14px;
+}
+
+.datastream-container .sub-container{
+  display: grid;
+  grid-template-columns: auto 320px 50px 320px 50px 320px auto;
+  grid-template-rows: 0px auto 30px;
+  width:100%; 
+  min-height: calc(100vh - 110px); 
+  background-color:#f2f4f6
+}
+
+.datastream-container .top {
+  height: 50px;
+  display: flex;
+  width: 100%;
+}
+
+.datastream-container .bottom{
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 60px;
+  width:100%;
+}
+
+.item-b {
+  grid-column-start: 2;
+  grid-column-end: 3;
+  grid-row-start: 2;
+  grid-row-end: 3;
+}
+
+.item-c {
+  grid-column-start: 4;
+  grid-column-end: 5;
+  grid-row-start: 2;
+  grid-row-end: 3;
+}
+
+.item-d {
+  grid-column-start: 6;
+  grid-column-end: 7;
+  grid-row-start: 2;
+  grid-row-end: 3;
+}
+
+.item-bc {
+  grid-column-start: 3;
+  grid-column-end: 4;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  position: relative;
+}
+.item-cd {
+  grid-column-start: 5;
+  grid-column-end: 6;
+  grid-row-start: 2;
+  grid-row-end: 3;
+  position: relative;
+}
+.item-e {
+  grid-column-start: 1;
+  grid-column-end: 8;
+  grid-row-start: 3;
+  grid-row-end: 4;
+  background-color: #fff;
+  padding: 18px;
+}
+
+.col-title {
+  font-size: 24px;
+  padding: 15px 0;
+  margin-top: 20px;
+}
+
+.panel {
+  background-color: #ffffff;
+}
+.panel-title {
+
+  padding: 15px 20px;
+  border-bottom: 1px solid #eeeeee;
+}
+.panel-body {
+  padding: 15px 20px;
+}
+.panel-body-bt {
+  padding: 15px 20px;
+  border-top: 1px solid #eeeeee;
+}
+.panel-footer {
+  padding: 15px 20px;
+  border-top: 1px solid #eeeeee;
+  text-align: center;
+  color: #39c3f0;
+}
+.select-box {
+  width: 100%;
+  height: 42px;
+}
+
+.preload-view{
+  height: auto;
+}
+
+.select-box > select {
+  width: 100%;
+  border: 1px solid #cccccc;
+  margin-top: 5px;
+}
+.select-box > input {
+  margin-top: 5px;
+}
+
+.select-box .select-image-container{
+  height: 120px;
+  margin: 50px 0;
+  display: flex;
+  align-items: center;
+}
+
+.select-box .select-box-image{
+  height: 100px;
+  width: auto;
+  margin: 0 auto;
+  display: block;
+}
+
+.select-box .select-box-label{
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.select-label {
+  color: #999999;
+}
+.cat-info-close {
+  margin-left:10px;
+  margin-top: 15px;
+}
+.conn-arrow-right {
+  position:absolute;
+  top:104px;
+  left:37px;
+  color:#39c3f0;
+}
+.conn-line {
+  width:calc(100% - 2px);
+  height:2px;
+  background-color:#39c3f0;
+  position:absolute;
+  top:109px;
+}
+.conn-line-half {
+  width:calc(50% - 1px);
+  height:2px;
+  background-color:#39c3f0;
+  position:absolute;
+  top:109px;
+  left: 50%;
+}
+.conn-line-left-half {
+  width:calc(50% + 1px);
+  height:2px;
+  background-color:#39c3f0;
+  position:absolute;
+}
+.plus-icon {
+  color: #108ee9;
+  margin-left: 7px;
+}
+.close-icon {
+  color: red;
+  margin-left: 7px;
+}
+.conn-arrow-down {
+  position:absolute;
+  top:28px;
+  left:6.2px;
+  color:#39c3f0;
+}
+.conn-arrow-down-container {
+  height:39px;
+  width:2px;
+  background-color:#39c3f0;
+  margin-left:calc(50% - 1px);
+}
+.vertical-line {
+  width:2px;
+  position:absolute;
+  top:110px;
+  left:25px;
+  background-color:#39c3f0;
+}
+
+.error{
+  border: solid 1px #9c0909;
+}
+
+.datastream-error{
+  font-size: 12px;
+  color: #9c0909;
+  margin-top: 5px;
+}
+
+input.error{
+  box-shadow: none;
+}
+
+.error:focus{
+  box-shadow: none !important;
+}
+
+.forbiddenCursor{
+  cursor: not-allowed;
+}
+
+.script-list{
+  max-height: 200px !important;
+  overflow: scroll !important;
+}
+
+.stream-name::placeholder{
+  font-size: 10px;
+}
+input[disabled], select[disabled], textarea[disabled] {
+  background-color: #f7f7f7 !important;
+  cursor:  not-allowed;
+}
+
+.data-stream-title{
+  font-size:14px;
+  padding:15px; 
+  font-weight:600;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 40px);
+  white-space: nowrap;
+  overflow: hidden;
+}
+

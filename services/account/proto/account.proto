@@ -1,0 +1,166 @@
+syntax = "proto3";
+import "google/protobuf/timestamp.proto";
+
+package api;
+
+service AccountService {
+    /* Tenant APIs */
+    rpc CreateTenant(CreateTenantRequest) returns (CreateTenantResponse) {
+    }
+
+    rpc GetTenants(GetTenantsRequest) returns (GetTenantsResponse) {
+    }
+
+    rpc UpdateTenant(UpdateTenantRequest) returns (UpdateTenantResponse) {
+    }
+
+    rpc DeleteTenant(DeleteTenantRequest) returns (DeleteTenantResponse) {
+    }
+
+    /* User APIs */
+    rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {
+    }
+
+    rpc GetUsers(GetUsersRequest) returns (GetUsersResponse) {
+    }
+
+    // Internal API
+    rpc GetUserByEmail(GetUserByEmailRequest) returns (GetUserByEmailResponse) {
+    }
+
+    rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {
+    }
+
+    rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse) {
+    }
+
+    rpc GetUserProjectRoles(GetUserProjectRolesRequest) returns (GetUserProjectRolesResponse) {
+    }
+}
+
+message Paging {
+    string startToken = 1;
+    uint32 size = 2;
+}
+
+message Tenant {
+    string id = 1;
+    string externalId = 2;
+    string name = 3;
+    string token = 4;
+    string description = 5;
+    double version = 6;
+    google.protobuf.Timestamp createdAt = 7;
+    google.protobuf.Timestamp updatedAt = 8;
+    map<string,bool> profile = 9;
+    string createdBy = 10;
+}
+
+message CreateTenantRequest {
+	Tenant tenant = 1;
+}
+
+message CreateTenantResponse {
+    string id = 1;
+}
+
+message GetTenantsRequest {
+    string id = 1;
+    string externalId = 2;
+    Paging paging = 3;
+}
+
+message GetTenantsResponse {
+    repeated Tenant tenants = 1;
+    Paging paging = 2;
+}
+
+message UpdateTenantRequest {
+    Tenant tenant = 1;
+}
+
+message UpdateTenantResponse {
+    string id = 1;
+}
+
+message DeleteTenantRequest {
+    string id = 1;
+}
+
+message DeleteTenantResponse {
+    string id = 1;
+}
+
+message User {
+    string tenantId = 1;
+    string id = 2;
+    string email = 3;
+    string name = 4;
+    string password = 5;
+    string role = 6;
+    double version = 7;
+    google.protobuf.Timestamp createdAt = 8;
+    google.protobuf.Timestamp updatedAt = 9;
+}
+
+message ProjectRole {
+    string projectId = 1;
+    string role = 2;
+    Paging paging = 3;
+}
+
+message CreateUserRequest {
+    User user = 1;
+}
+
+message CreateUserResponse {
+    string id = 1;
+}
+
+message GetUsersRequest {
+    string tenantId = 1;
+    string id = 2;
+    string email = 3;
+    string projectId = 4;
+    Paging paging = 5;
+}
+
+message GetUsersResponse {
+    repeated User users = 1;
+    Paging paging = 2;
+}
+
+message GetUserByEmailRequest {
+    string email = 1;
+}
+
+message GetUserByEmailResponse {
+    User user = 1;
+}
+
+message UpdateUserRequest {
+    User user = 1;
+    bool dont_encrypt_password = 2;
+}
+
+message UpdateUserResponse {
+    string id = 1;
+}
+
+message DeleteUserRequest {
+    string id = 1;
+}
+
+message DeleteUserResponse {
+    string id = 1;
+}
+
+message GetUserProjectRolesRequest {
+    string id = 1;
+    Paging paging = 2;
+}
+
+message GetUserProjectRolesResponse {
+    repeated ProjectRole projectRoles = 1;
+    Paging paging = 2;
+}

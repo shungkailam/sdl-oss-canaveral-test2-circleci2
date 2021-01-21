@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package mlmodel;
+
+service MLModel {
+    // Validates the ML Model
+    rpc Validate(ValidateRequest) returns (ValidateResponse) {}
+ }
+
+enum MLModelType {
+    TENSORFLOW_1_13_1 = 0;
+    OPENVINO_2019_R2 =1;
+}
+
+message ValidateRequest {
+    string url = 1;
+    int64 mlmodel_size_bytes = 2;
+    MLModelType mlmodel_type =3;
+}
+
+message ValidateResponse {
+    bool valid_model = 1;
+    string error_msg = 2;
+}

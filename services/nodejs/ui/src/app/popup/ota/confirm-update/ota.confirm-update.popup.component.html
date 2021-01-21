@@ -1,0 +1,77 @@
+<div class="confirm-update-container">
+    <div class="item-a">
+        <div class="popup-title">Confirm 1 Update</div>
+        <div class="icon-star close-div">
+        <i class="fulldetail-close-button" title="Back" (click)="onClosePopup()">
+            <svg viewBox="0 792 2048 2048" class="svg-icon  -id-K">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#K"></use>
+            </svg>
+        </i>
+        </div>
+    </div>
+    <nz-alert [nzType]="'warning'" nzCloseable style="width: 100vw;" class="confirm-warning" [nzDescription]="'Once the Update begins, it cannot be aborted or paused.'">
+    </nz-alert>
+    <div class="item-b">
+        <div class="content">
+            <div class="title">
+                Here is the list of selected updates and the entities affected. Are you sure you want to apply the update?
+            </div>
+            <div class="subtitle">
+                Total {{updates.length}} update 
+            </div>
+            <div class="update-card">
+                <div class="card-row" *ngFor="let update of updates">
+                    <span style="color: rgba(0, 0, 0, 0.85)">{{update.name}}</span>
+                    <div style="float: right; width: 20px;">
+                        <span class="update-circle">
+                            {{edges.length}}
+                        </span>
+                    </div>
+                </div> 
+                <div class="card-row">
+                    <span>Selected Entities: </span>
+                    <span class="selectedEntitiesText" [ngClass]="extraText ? '' : 'larger-width'" style="color: rgba(0, 0, 0, 0.85)">{{selectedEntitiesText}}</span>
+                    <span style="color: rgba(0, 0, 0, 0.85)">{{extraText}}</span>
+                    <a (click)="openEntities()" style="float:right;">
+                        View
+                    </a>
+                </div> 
+                <div class="card-row" style="border-bottom:none !important">
+                    <span>Update Version:</span>
+                    <span style="color: rgba(0, 0, 0, 0.85)">{{updateVersion}}</span>
+                </div> 
+            </div>  
+        </div>
+    </div>
+    <div class="item-c">
+        <div class="popup-footer">
+            <button nz-button (click)="onClosePopup()">
+                <span>Cancel</span>
+            </button>
+            <button nz-button [nzType]="'primary'" style="margin-left: 5px;" (click)="onConfirmUpdate()">
+                <span>Confirm</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<nz-modal [nzVisible]="showEntities" [nzTitle]="updateTitle" [nzContent]="modalContent"
+(nzOnOk)="viewEntities()" [nzOkText]="'Done'" (nzOnCancel)="viewEntities()" [nzCancelText]="'Cancel'">
+    <ng-template #modalContent>
+        <div class="content">
+            All the selected edges will be updated with the Edge Updates - {{updateVersion}}.
+        </div>
+        <div class="modal-container">
+            <div class="modal-item">
+                <span style="color: rgba(0, 0, 0, 0.85); width: 300px; display: inline-block;">Name</span>
+                <span class="modal-item-width">Installed Version</span>
+            </div>
+            <div class="modal-item-container">
+                <div *ngFor="let edge of edges" class="modal-item">
+                    <span class="modal-item-width" style="color: rgba(0, 0, 0, 0.85); width: 300px;">{{edge.name}}</span>
+                    <span class="modal-item-width">{{edge.edgeVersion}}</span>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</nz-modal>

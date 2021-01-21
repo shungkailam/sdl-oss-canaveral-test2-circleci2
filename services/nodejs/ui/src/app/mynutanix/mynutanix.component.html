@@ -1,0 +1,21 @@
+<div *ngIf="noSherlockAccess" class="noSherlockAccess">
+    <div class="error-container">
+       <div class="error-title">
+            Service not activated
+       </div>
+       <div class="error-content">
+            It doesn’t look like you have access to the Nutanix IOT platform yet.
+       </div>
+       <div class="error-content"> 
+            If you believe this is an error or if you would like to sign up for this product, please contact your system administrator.
+       </div>
+       <div class="error-link">
+            <div (click)="onClickLearnSherlock()">
+               Learn more about Sherlock
+            </div>
+            <div (click)="onClickmuNutanix()">
+               Go to myNutanix
+            </div>
+       </div>
+    </div>
+</div>

@@ -1,0 +1,423 @@
+<div class="datastream-container">
+  <div class="top">
+    <div class="data-stream-title">{{ dataStream !== null ? 'Update Data Stream' : 'Create Data Stream' }} in Project {{this.projectName}}</div>
+    <div (click)="onClosePopup()" class="icon-star" style="width: 15px;height: 15px; position: absolute; top: 15px; right: 15px;cursor: pointer;color:#444444;fill:#444444;">
+      <i class="fulldetail-close-button" title="Back">
+        <svg viewBox="0 792 2048 2048" class="svg-icon  -id-K">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#K"></use>
+        </svg>
+      </i>
+    </div>
+  </div>
+  <div class="sub-container">
+    <div class="item-b">
+      <div class="col-title">
+        <span>Input</span>
+      </div>
+      <div style="background-color:#fff; padding: 20px">
+        <div>
+          <div>
+            <div class="select-box preload-view" *ngIf="!origin">
+              <div class="select-image-container">
+                <img class="select-box-image" src="assets/sensors.png" style="height: 75px;">
+              </div>
+              <div class="select-box-label">
+                No Data sources have been added
+              </div>
+              <nz-dropdown [nzPlacement]="'bottomCenter'" style="display: block; margin: 0 auto; width: fit-content">
+                <button nz-button nz-dropdown style="background-color: #108ee9; color: #fff; margin: 0 auto;">
+                  <i class="anticon anticon-plus" style="display: inline-block;"></i>
+                  Add Data Source
+                </button>
+                <ul nz-menu>
+                  <li (click)="onClickDataSource($event)" nz-menu-item>
+                    <a >Data Source</a>
+                  </li>
+                  <li (click)="onClickDataSource($event)" nz-menu-item>
+                    <a>Data Stream</a>
+                  </li>
+                </ul>
+              </nz-dropdown>
+            </div>
+            
+          </div>
+          <div *ngIf = 'origin'>
+              <div class="select-label">Origin</div>
+              <div class="select-box">
+                <select [(ngModel)]="origin">
+                  <option value="Data Source">Data Source</option>
+                  <option value="Data Stream">Data Stream</option>
+                </select>
+              </div>
+          </div>
+          
+        </div>
+        <div *ngIf="origin === 'Data Stream' && dataStreams.length !== 0" style="margin-top: 20px;">
+          <div class="select-label">Data Stream</div>
+          <div class="select-box">
+            <select [(ngModel)]="dataStreamId">
+              <option value="" [selected]="!dataStreamId" disabled>Select...</option>
+              <option *ngFor="let ds of dataStreams" value="{{ds.id}}" [selected]="dataStreamId === ds.id">
+                {{ds.name}}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div *ngIf="origin === 'Data Stream' && dataStreams.length === 0" style="color:red; margin-top: 5px; font-size: 11px;">
+          No data stream found. Please create data stream first!
+        </div>
+        <div *ngIf="origin === 'Data Source'" style="margin-top: 20px;">
+          <div class="select-label">Data Sources
+            <span *ngIf="catInfos.length === 0 || sensorCount === 0" style="float:right">0 field</span>
+            <span *ngIf="catInfos.length !== 0 && sensorCount > 0" style="float:right">{{sensorCount}} fields in {{dataSourceCount}} Data Sources</span>
+          </div>
+          <div nz-row *ngFor="let ci of catInfos; let i = index">
+            <div nz-col [nzSpan]="10">
+              <div class="select-box">
+                <select [(ngModel)]="ci.id" (change)="onChangeSelectCategory(ci)" [ngStyle]="{'color': (ci.id === '') ? '#aaaaaa' : 'black'}">
+                  <option value="" disabled selected>Category</option>
+                  <option *ngFor="let cat of categories" value="{{cat.id}}">
+                    {{cat.name}}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div nz-col [nzSpan]="2">
+            </div>
+            <div nz-col [nzSpan]="10">
+              <div class="select-box">
+                <select [(ngModel)]="ci.value" (ngModelChange)="onUpdateCatInfo()">
+                  <option value="" disabled selected>Value</option>
+                  <option *ngFor="let cv of ci.values" value="{{cv}}" [disabled]="disableCategory(ci, cv)">{{cv}}</option>
+                </select>
+              </div>
+            </div>
+            <div *ngIf="catInfos.length > 1" nz-col [nzSpan]="2">
+              <i (click)="onClickCloseCategoryInfo(i);" class="anticon anticon-close cat-info-close"></i>
+            </div>
+          </div>
+          <div>
+            <a (click)="onClickAddCategoryInfo()">Add...</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="item-bc" *ngIf="(this.origin && showTrans) || dataStream !== null ">
+      <div class="conn-line"></div>
+      <i class="anticon anticon-arrow-right conn-arrow-right"></i>
+    </div>
+    <div class="item-c">
+      <div class="col-title">
+        <span>Processing</span>
+      </div>
+      <div class="select-box preload-view" *ngIf="!showTrans && dataStream === null" style="background-color: #fff; padding: 20px;">
+        <div class="select-preload-view">
+            <div class="select-image-container">
+              <img class="select-box-image" src="assets/module.png">
+            </div>
+            <div class="select-box-label">
+              No Processing Modules have been added
+            </div>
+            <nz-dropdown [nzPlacement]="'bottomCenter'" style="display: block; margin: 0 auto; width: fit-content">
+              <button nz-button nz-dropdown style="background-color: #108ee9; color: #fff; margin: 0 auto;">
+                <i class="anticon anticon-plus" style="display: inline-block;"></i>
+                Add Module
+              </button>
+              <ul nz-menu class="script-list">
+                <li nz-menu-item>
+                  <a (click)="onClickAddModules($event)">None</a>
+                </li>
+                <li nz-menu-item *ngFor="let s of scripts">
+                  <a (click)="onClickAddModules($event, s)">{{s.name}}</a>
+                </li>
+              </ul>
+            </nz-dropdown>
+        </div>
+      </div>
+      <div *ngIf="showTrans || dataStream !== null">
+        <div style="padding: 20px 20px 0 20px;background-color:#fff;">
+          <div nz-row>
+            <div nz-col [nzSpan]="13">
+              <div class="select-label">Sampling Interval</div>
+            </div>
+            <div nz-col [nzSpan]="11">
+              <label nz-checkbox [(ngModel)]="enableSampling">
+                <span>Enable</span>
+              </label>
+            </div>
+          </div>
+          <div nz-row *ngIf="enableSampling">
+            <div nz-col [nzSpan]="11">
+              <div class="select-box">
+                <input [(ngModel)]="samplingInterval" (ngModelChange)="samplingIntervalChange()" [ngClass]="{'error': samplingValueError}" type="number" value="1">
+                <div *ngIf="samplingValueError" class="datastream-error">
+                  Positive value please!
+                </div>
+              </div>
+            </div>
+            <div nz-col [nzSpan]="2">
+            </div>
+            <div nz-col [nzSpan]="11">
+              <div class="select-box">
+                <select [(ngModel)]="samplingIntervalUnits">
+                  <option value="millisecond">Millisecond</option>
+                  <option value="second">Second</option>
+                  <option value="minute">Minute</option>
+                  <option value="hour">Hour</option>
+                  <option value="day">Day</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngFor="let ti of transformationInfoList; let i = index;">       
+          <div style="padding: 20px; background-color: #fff;">
+            <div nz-row>
+              <div nz-col [nzSpan]="12">
+                <div class="select-label">Transformation</div>
+              </div>
+              <div nz-col [nzSpan]="12">
+                <a (click)="onClickUploadScript()" style="float:right;">Upload Script</a>
+              </div>
+            </div>
+            <div class="select-box">
+              <select [(ngModel)]="ti.transformationId" (ngModelChange)="onTransformationIdChange(ti)">
+                <option value="">None</option>
+                <option *ngFor="let s of scripts" value="{{s.id}}">{{s.name}}</option>
+              </select>
+            </div>
+          </div>
+          <div *ngIf="ti.transformationId === objectRecognitionId">
+            <div style="padding: 0 20px 20px 20px; background-color: #fff">
+              <div>
+                <div class="select-label">Object to Recognize</div>
+                <div class="select-box">
+                  <input type="text" placeholder="E.g., Person" style="width: 100%;">
+                </div>
+              </div>
+            </div>
+            <div style="padding: 0 20px 20px 20px; background-color: #fff">
+              <div class="select-label">Recognition Type</div>
+              <div class="select-box">
+                <select>
+                  <option value="" disabled selected>Select...</option>
+                  <option value="presence">Presence (True/False)</option>
+                  <option value="count">Count</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="ti.transformationId !== objectRecognitionId && ti.args.length !== 0">
+            <div *ngFor="let arg of ti.args" style="background:white; padding: 0 20px 20px 20px;">
+              <div>
+                <div class="select-label">{{arg.name}} ({{arg.type}})</div>
+                <div class="select-box">
+                  <input [type]="arg.type === 'number' ? 'number' : 'text'" [(ngModel)]="arg.value" style="width: 100%;">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div nz-row>
+              <div nz-col [nzSpan]="11">
+              </div>
+              <div nz-col [nzSpan]="2">
+                <div *ngIf="i !== transformationInfoList.length - 1" class="conn-arrow-down-container">
+                  <i class="anticon anticon-arrow-down conn-arrow-down"></i>
+                </div>
+              </div>
+              <div nz-col [nzSpan]="7">
+              </div>
+              <div nz-col [nzSpan]="4">
+                <div style="margin-top: 10px; margin-bottom: 10px; float: right;">
+                  <i *ngIf="transformationInfoList.length !== 1" class="anticon anticon-close-circle close-icon" (click)="onClickCloseCircle(i)"></i>
+                  <i *ngIf="i === transformationInfoList.length - 1" class="anticon anticon-plus-circle plus-icon" (click)="onClickPlusCircle(i)"></i>
+                </div>
+              </div>
+            </div>
+        </div> 
+      </div>
+    </div>
+    <div class="item-cd" *ngIf = "(showTrans && showDes) || dataStream !== null">
+      <div *ngIf="transformationInfoList.length === 1">
+        <div class="conn-line"></div>
+        <i class="anticon anticon-arrow-right conn-arrow-right"></i>
+      </div>
+      <div *ngIf="transformationInfoList.length > 1">
+        <div>
+          <div class="conn-line-half"></div>
+          <i class="anticon anticon-arrow-right conn-arrow-right"></i>
+        </div>
+        <div style="position:relative;height:100%;">
+          <div class="vertical-line" [ngStyle]="{'height': getRightArrowHeight()}">
+          </div>
+        </div>
+        <div>
+          <div class="conn-line-left-half" [ngStyle]="{'top': getRightArrowPos()}"></div>
+        </div>
+      </div>
+    </div>
+    <div class="item-d">
+      <div class="col-title">Output</div>
+      <div style="padding: 20px;background-color:#fff;">
+        <div>
+          <div class="select-box preload-view" *ngIf = "!showDes && dataStream === null">
+            <div class="select-preload-view">
+                <div class="select-image-container">
+                  <img class="select-box-image" src="assets/destination.png" style="height: 100px">
+                </div>
+                <div class="select-box-label">
+                  No Destinations have been added
+                </div>
+                <nz-dropdown [nzPlacement]="'bottomCenter'" style="display: block; margin: 0 auto; width: fit-content">
+                  <button nz-button nz-dropdown style="background-color: #108ee9; color: #fff; margin: 0 auto;">
+                    <i class="anticon anticon-plus" style="display: inline-block;"></i>
+                    Add Destination
+                  </button>
+                  <ul nz-menu>
+                    <li nz-menu-item>
+                      <a (click)="onClickAddDestination($event)">Edge</a>
+                    </li>
+                    <li nz-menu-item>
+                      <a (click)="onClickAddDestination($event)">Cloud</a>
+                    </li>
+                  </ul>
+                </nz-dropdown>
+            </div>
+          </div>
+          <div *ngIf="showDes || dataStream !== null">
+            <div class="select-label">Stream Name</div>
+            <div class="select-box">
+              <input [(ngModel)]="streamName" type="text" (ngModelChange)="checkNameDuplicate(streamName)" (keypress)="dataSteamNameCheck($event)" [ngClass]="{'error': duplicateStream}" class="stream-name" [disabled]="dataStream !== null" placeholder="Please enter. Only lower case letters, numbers, '-'" style="width: 100%;">
+              <div *ngIf="duplicateStream" class="datastream-error"> 
+                Data Stream Name already exists.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="showDes || dataStream !== null" style="margin-top: 20px;">
+          <div class="select-label">Destination</div>
+          <div class="select-box">
+            <select [(ngModel)]="destination">
+              <option value="Edge">Edge</option>
+              <option value="Cloud">Cloud</option>
+            </select>
+          </div>
+        </div>
+        <div *ngIf="destination === 'Edge' && streamName !== ''">
+          <div style="margin-top: 20px;">
+            <div class="select-label">Stream Type</div>
+            <div class="select-box">
+              <select [(ngModel)]="edgeStreamType">
+                <option *ngFor="let est of edgeStreamTypes" value="{{est}}" [selected]="edgeStreamType === est">{{est === 'None' ? 'RealTime' : est}}</option>
+              </select>
+            </div>
+          </div>
+          <div style="margin-top: 20px;">
+            <div class="select-label">Data Retention</div>
+            <div class="select-box">
+              <select>
+                <option value="xyz">Up to 200 TB</option>
+              </select>
+            </div>
+          </div>
+          <div *ngIf="affectedEdges.length > 0">
+            <div style="font-weight: bold; margin-top: 20px;">Affected Edges</div>
+            <div>
+              Each edge listed below will contain a data stream named '{{streamName}}', which contains data only from data sources within
+              that edge.
+            </div>
+            <div nz-row style="border-bottom: 1px solid #cccccc; margin-top: 25px;">
+              <div nz-col [nzSpan]="12">
+                Name
+              </div>
+              <div nz-col [nzSpan]="12">
+                Data Sources
+              </div>
+            </div>
+            <div style="height: 75px; overflow: auto;">
+              <div *ngFor="let edge of affectedEdges" nz-row>
+                <div nz-col [nzSpan]="12">
+                  {{edge.name}}
+                </div>
+                <div nz-col [nzSpan]="12">
+                  {{edge.dsCount + ' (' + edge.sensorCount + ' fields)'}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="destination === 'Cloud' && streamName !== ''">
+          <div style="margin-top: 20px;">
+            <div class="select-label">Cloud Type</div>
+            <div class="select-box">
+              <select [(ngModel)]="cloudType" (ngModelChange)="changeCloudType(true)">
+                <option value="AWS" [selected]="cloudType === 'AWS'">AWS</option>
+                <option value="GCP" [selected]="cloudType === 'GCP'">GCP</option>
+              </select>
+            </div>
+          </div>
+          <div style="margin-top: 20px;">
+            <div class="select-label">Cloud Profile</div>
+            <div class="select-box">
+              <select [(ngModel)]="cloudCredsId">
+                <option *ngFor="let cp of cloudCredsList" value="{{cp.id}}" [selected]="cloudCredsId === cp.id">{{cp.name}}</option>
+              </select>
+            </div>
+          </div>
+          <div *ngIf="cloudType === 'AWS'" style="margin-top: 20px;">
+            <div class="select-label">Stream Type</div>
+            <div class="select-box">
+              <select [(ngModel)]="awsStreamType">
+                <option *ngFor="let st of awsStreamTypes" value="{{st}}" [selected]="awsStreamType === st">{{st}}</option>
+              </select>
+            </div>
+          </div>
+          <div *ngIf="cloudType === 'GCP'" style="margin-top: 20px;">
+            <div class="select-label">Stream Type</div>
+            <div class="select-box">
+              <select [(ngModel)]="gcpStreamType">
+                <option *ngFor="let st of gcpStreamTypes" value="{{st}}" [selected]="gcpStreamType === st">{{st}}</option>
+              </select>
+            </div>
+          </div>
+          <div *ngIf="cloudType === 'AWS'" style="margin-top: 20px;">
+            <div class="select-label">Region</div>
+            <div class="select-box">
+              <select [(ngModel)]="awsRegion">
+                <option *ngFor="let rg of awsRegions" value="{{rg}}" [selected]="awsRegion === rg">{{rg}}</option>
+              </select>
+            </div>
+          </div>
+          <div *ngIf="cloudType === 'GCP'" style="margin-top: 20px;">
+            <div class="select-label">Region</div>
+            <div class="select-box">
+              <select [(ngModel)]="gcpRegion">
+                <option *ngFor="let rg of gcpRegions" value="{{rg}}" [selected]="gcpRegion === rg">{{rg}}</option>
+              </select>
+            </div>
+          </div>
+          <div style="margin-top: 20px;">
+            <div class="select-label">Data Retention</div>
+            <div class="select-box">
+              <select>
+                <option value="xyz">Up to 200 TB</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bottom">
+    <div xx-style="margin-top: 60px;">
+      <div style="float: right;">
+        <button nz-button (click)="onClosePopup()">
+          <span>Cancel</span>
+        </button>
+        <button nz-button style="margin-left: 10px;" [disabled]="isCreateDisabled()" [nzType]="'primary'" [nzLoading]="isConfirmLoading" (click)="onCreateDataStream()">
+          <span>{{ dataStream !== null ? 'Update' : 'Create' }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

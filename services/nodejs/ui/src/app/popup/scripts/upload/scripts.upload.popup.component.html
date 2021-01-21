@@ -1,0 +1,262 @@
+<div class="script-upload-container">
+  <div class="item-a">
+    <div class="popup-title">
+      {{script !== null   && scriptAction !== 'duplicate' ? 'Edit Script' : 'Add Script'}}
+    </div>
+    <div *ngIf="associatedWithDs && current === 0 && !isCloned" class="script-alert">
+        Only name and description are editable here, because this script is used by datastream(s). For more editions, please duplicate this script.
+    </div>
+    <div *ngIf="associatedWithDs && current === 1 && !isCloned" class="script-alert">
+        Editing script is not allowed here, because this script is used by datastream(s). To edit this script, please duplicate it.
+    </div>
+    <div (click)="onClosePopup()" class="icon-star close-div">
+      <i class="fulldetail-close-button" title="Back">
+        <svg viewBox="0 792 2048 2048" class="svg-icon  -id-K">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#K"></use>
+        </svg>
+      </i>
+    </div>
+  </div>
+  <div class="item-a2">
+    <div class="wide-steps-div" *ngIf="isCloned && associatedWithDs">
+        <nz-steps [(nzCurrent)]="current">
+          <nz-step [nzTitle]="'General Information'"></nz-step>
+          <nz-step [nzTitle]="'Script'" class="script-step-width"></nz-step>
+          <nz-step [nzTitle]="'Update Data Stream'"></nz-step>
+        </nz-steps>
+    </div>
+    <div class="steps-div" *ngIf="!isCloned || !associatedWithDs">
+        <nz-steps [(nzCurrent)]="current">
+          <nz-step [nzTitle]="'General Information'"></nz-step>
+          <nz-step [nzTitle]="'Script'"></nz-step>
+        </nz-steps>
+    </div>
+  </div>
+  <div class="item-b">
+    <div *ngIf="current === 0">
+      <div *ngIf="!isLoading" class="content">
+        <div class="input-group">
+          <div class="content-subtitle">
+            Name
+          </div>
+          <input type="text" name="scriptname" maxlength=200 [ngClass]="{'error-border': duplicateScriptNameFound}" [(ngModel)]="scriptName" (ngModelChange)="checkDuplicateScripts(scriptName)">
+          <div *ngIf="duplicateScriptNameFound" class='error-style' style="margin: 5px 0 5px 10px;"> Name already exists. Please enter a new name.</div>
+        </div>
+        <!-- // disable this for alpha
+          <div class="input-group" style="margin-top:20px">
+              <div>
+                Type
+              </div>
+              <nz-radio-group [(ngModel)]="radioValue">
+                <label nz-radio [nzValue]="'lambda'">
+                  <span>Lambda</span>
+                </label>
+                <label nz-radio [nzValue]="'transformation'">
+                  <span>Transformation</span>
+                </label>
+              </nz-radio-group>
+            </div> -->
+
+        <div class="input-group">
+          <div class="content-subtitle">
+            Description
+          </div>
+          <textarea style="height:95px;" [(ngModel)]="desp" maxlength=200></textarea>
+        </div>
+        <div class="input-group">
+            <div class="content-subtitle">
+                Project
+            </div>
+            <nz-select [nzDisabled]= "context === 'project' || isUpdate" style="width: 700px;" [nzPlaceHolder]="'Select...'" [(ngModel)]= "projectId" (ngModelChange)="changeProjectId(projectId)" >
+                <nz-option *ngFor="let p of projectsData" [nzValue]="p.id"  [nzLabel]="p.name"></nz-option>
+            </nz-select>
+        </div>
+        <div *ngIf="projectId ">
+          <div class="input-group">
+            <div class="content-subtitle">Language</div>
+            <div>
+              <nz-select style="width: 700px;" [nzPlaceHolder]="'Select...'" [(ngModel)]="language" [nzDisabled] = "associatedWithDs && !isCloned" (ngModelChange)="onChangeLanguage(language)">
+                  <nz-option *ngFor="let lang of langaugeList" [nzValue]="lang"  [nzLabel]="lang"></nz-option>
+              </nz-select>
+              <!--<select class="select-option" [(ngModel)]="language" style="width: 100%; border: 1px solid #cccccc;" [disabled]="associatedWithDs && !isCloned" (ngModelChange)="onChangeLanguage(language)">
+                  <option value="" disabled [selected]="language === ''">Select...</option>
+                  <option *ngFor="let lang of langaugeList" value="{{lang}}" [selected]="language === lang">{{lang}}</option>
+              </select>-->
+            </div>
+          </div>
+          <div class="input-group">
+            <div class="content-subtitle">Runtime Environment</div>
+            <div>
+              <nz-select  style="width: 700px;" [nzPlaceHolder]="'Select...'" [(ngModel)]="envName" [nzDisabled] = "associatedWithDs && !isCloned">
+                  <nz-option *ngFor="let e of environmentList" [nzValue]="e.name"  [nzLabel]="e.name"></nz-option>
+              </nz-select>
+              <!--<select class="select-option" [(ngModel)]="envName" style="width: 100%; border: 1px solid #cccccc;" [disabled]="associatedWithDs && !isCloned">
+                <option value="" disabled [selected]="envName === ''">Select...</option>
+                <option *ngFor="let e of environmentList" [selected]="e.name === envName" value="{{e.name}}">{{e.name}}</option>
+              </select>-->
+            </div>
+          </div>
+        </div>     
+      </div>
+      <div  class="noContent" *ngIf= "isLoading">
+        <div><nz-spin></nz-spin></div>
+      </div>
+    </div>
+    <div class="script-step-container" *ngIf="current === 1">
+      <div style="min-width: 360px; width: 360px; padding:20px 20px 20px 0; position: relative;">
+        <div class="editor-layer" *ngIf="showLayer()"></div>
+        <div>
+          Parameters can be defined here and can be utilized in transformations in the script.
+        </div>
+        <div *ngIf="!showAddParamTable" class="center-container">
+          <div class="center-item">
+            <div>No Parameters Have been added yet.</div>
+            <div style="margin-top: 20px">
+              <button nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="onClickAddParam()">
+                <i class="anticon anticon-plus"></i>
+                <span>Add parameter</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column;" *ngIf="showAddParamTable">
+          <div style="display:flex; margin-top: 20px;">
+            <div style="font-weight: bold;">List of Parameters</div>
+            <div class="spacer"></div>
+            <div>
+              <a (click)="onAddParam()">
+                <i class="anticon anticon-plus"></i>
+                <span>Add Parameter</span>
+              </a>
+            </div>
+          </div>
+          <nz-table #nzTable [nzDataSource]="data" [nzIsPagination]="false" class="param-table-width">
+            <thead nz-thead>
+              <tr>
+                <th nz-th [nzWidth]="'40%'">
+                  <span>Name</span> 
+                </th>
+                <th nz-th [nzWidth]="'40%'">
+                  <span>Type</span>
+                </th>
+                <th nz-th>
+                  <span></span>
+                </th>
+              </tr>
+            </thead>
+            <tbody nz-tbody>
+              <tr nz-tbody-tr (click)="clickRow(data)" *ngFor="let data of nzTable.data">
+                <td nz-td [ngStyle]="{'padding': editRow===data.key ? '0' : '8px'}">
+                  <span *ngIf="editRow!==data.key" [ngStyle]="{'color': data.name ? 'rgba(0, 0, 0, 0.65)' : '#bbbbbb'}" >{{data.name || 'Add Name'}}</span>
+                  <span *ngIf="editRow===data.key">
+                    <input [(ngModel)]="tempEditObject[data.key].name" class="param-type" placeHolder="Add Name" type="text">
+                  </span>
+                </td>
+                <td nz-td [ngStyle]="{'padding': editRow===data.key ? '0' : '8px'}">
+                  <span *ngIf="editRow!==data.key" [ngStyle]="{'color': data.type ? 'rgba(0, 0, 0, 0.65)' : '#bbbbbb'}">{{data.type || 'Add Type'}}</span>
+                  <span *ngIf="editRow===data.key">
+                    <select [(ngModel)]="tempEditObject[data.key].type" class="param-type">
+                      <option disabled selected value="">Select...</option>
+                      <option value="{{o}}" *ngFor = "let o of this.paramType">{{o}}</option>
+                    </select>
+                  </span>
+                </td>
+                <td nz-td style="padding: 0px; min-width: 70px; width: 70px;">
+                  <span *ngIf="editRow===data.key">
+                    <button style="margin-left:6px;" (click)="cancel($event, data)" nz-button [nzSize]="'small'" [nzShape]="'circle'">
+                      <i class="anticon anticon-close"></i>
+                    </button>
+                    <button style="margin-top:5px; margin-left:4px;" nz-button [disabled]="!tempEditObject[data.key].name || !tempEditObject[data.key].type"
+                    [nzType]="'primary'" [nzSize]="'small'" [nzShape]="'circle'" (click)="save($event, data)">
+                    <i class="anticon anticon-check"></i>
+                  </button>
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </nz-table>
+        </div>
+      </div>
+      <div style="flex-grow: 2;display:flex;flex-direction: column;background-color:#eeeeee;padding:20px;">
+        <div style="display: flex;">
+          <div style="margin: 5px 0;">
+            <input type="file" [disabled]="showLayer()" name="scriptfile" size="80" (change)="handleFileSelect($event)">
+            <div *ngIf="code.length > 30720" class="error-style">
+              File size too large. Please limit character number to 30720.
+            </div>
+          </div>
+          <div class="spacer"></div>
+          <div class="theme-select">
+            <select [(ngModel)]="theme" (ngModelChange)="onChangeTheme()">
+              <option *ngFor="let thm of themes" value="{{thm.value}}" [selected]="theme === thm.value">{{thm.name}}</option>
+            </select>
+          </div>
+          <button nz-button (click)="displayDiffEditor()" [disabled]="disableDiff()">
+            <span>{{showDiff ? 'Show Editor' : 'Show Diff'}}</span>
+          </button>
+        </div>
+        <div style="margin-top: 20px;width:100%;height:calc(100% - 60px);">
+          <monaco-editor [readOnly]="showLayer()" *ngIf="!showDiff" #monacoEditor [(ngModel)]="code" [language]="language"></monaco-editor>
+          <monaco-editor [readOnly]="showLayer()" *ngIf="showDiff" #monacoDiffEditor [(ngModel)]="diffObj" [showDiff]="true" [language]="language" [editorHeight]=400></monaco-editor>
+        </div>
+      </div>
+    </div>
+    <div class="script-step-container" *ngIf="current === 2 && associatedWithDs && isCloned">
+      <div class="data-stream-container">
+        <div *ngIf="allowDsChange">
+          Here is a list of data streams using this script. Select Data stream(s) for which the script has to be updated.
+          <div style="font-weight: bold; margin-top: 10px;">
+            Total  {{associatedDsList.length}} Data Stream(s)
+          </div>
+          <div class="data-stream-list">
+            <label nz-checkbox [(ngModel)]="selectAllDataStreams" class="data-stream-item" (ngModelChange)="onSelectAllDataStreams()">
+              <span>Name</span>
+            </label>
+            <div *ngFor="let ds of associatedDsList" class="data-stream-item">
+              <label nz-checkbox [(ngModel)]="ds.selected" (ngModelChange)="onSelectDataStream(ds)">
+                <span>{{ds.name}}</span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="!allowDsChange">
+             Sorry! Update of data stream is not allowed. Because the script params get changed which will cause the data stream failure.
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="popup-bottom-content item-c">
+    <div class="popup-footer">
+      <button nz-button (click)="onClosePopup()">
+        <span>Cancel</span>
+      </button>
+      <button nz-button *ngIf="showBack()" (click)="onBack()">
+          <span>Back</span>
+      </button>
+      <button *ngIf="showNext()" nz-button [disabled]="isNextDisabled()" [nzType]="'primary'" (click)="onNext()">
+          <span>Next</span>
+      </button>
+      <button *ngIf="!showNext()" nz-button [disabled]="isCreateDisabled()" [nzType]="'primary'" [nzLoading]="isConfirmLoading"
+          (click)="handleCreate()">
+          <span>{{script !== null   && scriptAction !== 'duplicate' ? 'Update' : 'Create'}}</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<nz-modal [nzVisible]="showWarningmodel" [nzTitle]="'Modify script for data streams'" [nzContent]="modalContent" (nzOnCancel)="onConfirmClone(false)"
+(nzOnOk)="onConfirmClone(true)" [nzOkText]="'Confirm'" [nzCancelText]="'Cancel'">
+  <ng-template #modalContent>
+     <div class="upload-script-title">
+       Updating Scripts in data stream(s) may cause data stream(s) to break.
+     </div>
+     <div class="upload-script-content">
+      Are you sure you want to make the following changes to the script and datastream?
+      <ul class="upload-script-list">
+         <li *ngIf="selectedDS.length > 0">Apply this new script to one or more datastream(s).</li>
+         <li>Modify the script.</li>
+      </ul>
+     </div>
+     
+  </ng-template>
+</nz-modal>

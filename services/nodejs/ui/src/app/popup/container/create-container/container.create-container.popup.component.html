@@ -1,0 +1,119 @@
+<div class="create-profile-popup-container"*ngIf="!isLoading">
+        <div class="item-a">
+          <div class="popup-title">Container Registry Profile</div>
+          <div (click)="onClosePopup()" class="icon-star close-div">
+            <i class="fulldetail-close-button" title="Back">
+              <svg viewBox="0 792 2048 2048" class="svg-icon  -id-K">
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#K"></use>
+              </svg>
+            </i>
+          </div>
+          <nz-alert  *ngIf ="viewModal && _sherlockRole !==''" [nzType]="'warning'" [nzCloseable]="true" (nzOnClose)="onCloseAlert()" nzShowIcon>
+            <span  alert-body>
+                <pre class="notification">This Container Registry Profiles is associated with Runtime Environment(s)/Project(s). Only 'Name' and 'Description' can be edited.</pre>
+            </span>
+          </nz-alert>
+          <nz-alert  *ngIf ="_sherlockRole === ''" [nzType]="'warning'" [nzCloseable]="true" (nzOnClose)="onCloseAlert()" nzShowIcon>
+                <span  alert-body>
+                    <pre class="notification">Read-only for Project Users.</pre>
+                </span>
+          </nz-alert>
+        </div>       
+        <div  class="item-b">
+          <div class="content">
+                <div *ngIf="radioValue === 'new'" class="info">A container registry profile can be added directly by entering necessary information or by using an existing cloud profile.</div>
+                <div *ngIf="radioValue === 'cloud'" class="info">A Container registry profile can be created or associated with an existing cloud profile.</div>
+                <div class="options">
+                    <nz-radio-group [(ngModel)]="radioValue">
+                        <label [nzDisabled]="_sherlockRole === '' || viewModal || (profile && radioValue !== 'new')" nz-radio [nzValue]="'new'">
+                            <span>Add New</span>
+                        </label>
+                        <label [nzDisabled]="_sherlockRole === '' || viewModal || (profile && radioValue !== 'cloud')" nz-radio [nzValue]="'cloud'">
+                            <span>Use Existing cloud profile</span>
+                        </label>
+                    </nz-radio-group>
+                </div>
+                <div *ngIf="radioValue === 'cloud'" class="heading"><h4>Cloud Profile Section</h4></div>
+                <div *ngIf="radioValue === 'cloud'" class="input-group">
+                    <div class="content-subtitle">Cloud Profile</div>
+                    <div>
+                        <select [disabled]="_sherlockRole === '' || viewModal" [compareWith]="compareFn" [(ngModel)]="cloud"  #c (ngModelChange)= "checkCloudType($event)" style="width: 100%; margin-top: 5px; border: 1px solid #cccccc;">
+                           <option *ngIf="clouds.length === 1" disabled>Select...</option>
+                           <option *ngFor="let c of clouds;let i=index" [ngValue]="c" [disabled]="i===0 && clouds.length !== 1 ? true:''">{{c.name}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <div  class="heading"><h4>General Information</h4></div>
+                    <div class="input-group">
+                        <div class="content-subtitle">
+                            Name
+                        </div>
+                        <input [disabled]="_sherlockRole === ''" class="editField" *ngIf="radioValue === 'new'" type="text" [(ngModel)]="profileName" (ngModelChange)="checkProfileNameValid('new')" placeholder="Please enter. Must start and end with lower case alphanumeric characters. '-','.' are allowed." [ngClass]="{'error-border': duplicateprofileNameFound}">
+                        <input [disabled]="_sherlockRole === ''" class="editField" *ngIf="radioValue === 'cloud'" type="text" [(ngModel)]="cloudRegProfileName" (ngModelChange)="checkProfileNameValid('cloud')" placeholder="Please enter. Must start and end with lower case alphanumeric characters. '-' or '.' are allowed. (e.g. 'example.com')" [ngClass]="{'error-border':  duplicateCloudRegprofileNameFound}">
+                        <div *ngIf="(duplicateprofileNameFound && radioValue === 'new') || (duplicateCloudRegprofileNameFound && radioValue === 'cloud')" class='error-style'>
+                            Profile name already exists. Please enter a new Name.
+                        </div>
+                        <div *ngIf="(invalidContName && radioValue === 'new') || (invalidCloudName  && radioValue === 'cloud')" class='error-style'>
+                                Invalid Profile Name. Must start and end with lower case alphanumeric characters. '.','-' are allowed.
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <div class="content-subtitle">Description</div>
+                        <input [disabled]="_sherlockRole === ''" *ngIf="radioValue === 'new'" type="text" [(ngModel)]="profileDescp" placeholder="Describe the purpose">
+                        <input [disabled]="_sherlockRole === ''" *ngIf="radioValue === 'cloud'" type="text" [(ngModel)]="cloudDescp" placeholder="Describe the purpose">
+                    </div>
+                    <div *ngIf="radioValue === 'cloud'" class="input-group">
+                        <div class="content-subtitle">Server</div>
+                        <input [disabled]="_sherlockRole === '' || viewModal" [ngClass] = "{'awsPlaceHolder' : showAWSUI}" type="text" [(ngModel)]="cloudServer" [placeholder]= "showPlaceHolder()">
+                    </div>
+                    <div *ngIf="radioValue === 'new'" class="input-group">
+                        <div class="content-subtitle">Container Registry Host Address</div>
+                        <input [disabled]= "_sherlockRole === '' || viewModal" type="text" [(ngModel)]="profileHostAddress" placeholder="Please enter host address">
+                    </div>
+                    <div *ngIf="radioValue === 'new'" class="input-group">
+                        <div class="content-subtitle">Username</div>
+                        <input [disabled]="_sherlockRole === '' || viewModal" type="text" [(ngModel)]="profileUser" placeholder="Please enter">
+                    </div>
+                    <div *ngIf="radioValue === 'new'" class="input-group">
+                        <div class="content-subtitle">Password</div>
+                        <div>
+                            <input [disabled]="_sherlockRole === '' || viewModal" type="password" *ngIf="!showPassword" [(ngModel)]="profilePass">
+                            <input [disabled]="_sherlockRole === '' || viewModal" type="text" *ngIf="showPassword" [(ngModel)]="profilePass">
+                            <label *ngIf="!profile" nz-checkbox [(ngModel)]="showPassword" class="password">
+                                <span>{{showPassword ? 'Hide' : 'Show'}}</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div *ngIf="radioValue === 'new'" class="heading"><h4>Additional Information</h4></div>
+                    <div class="input-group" *ngIf="radioValue === 'new'">
+                        <div class="content-subtitle">Email Address</div>
+                        <input [disabled]="_sherlockRole === '' || viewModal" type="email" [(ngModel)]="profileEmail" placeholder="Please enter">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="popup-bottom-content item-c">
+              <div class="popup-footer">
+                  <button nz-button
+                          (click)="onClosePopup()">
+                    <span>Cancel</span>
+                  </button>
+                  <button *ngIf="_sherlockRole ===''" [nzType]="'primary'" nz-button
+                          (click)="onClosePopup()">
+                    <span>Done</span>
+                  </button>
+                  <button *ngIf="_sherlockRole !==''" nz-button
+                          [nzLoading]="isConfirmLoading"
+                          [disabled]="isCreateDisabled()"
+                          [nzType]="'primary'"
+                          (click)="onClickCreateProfile()">
+                    <span>{{profileId ? 'Update' : 'Create'}}</span>
+                  </button>
+              </div>
+        </div>
+      </div>
+      <div *ngIf="isLoading" class="center-spin">
+        <nz-spin></nz-spin>
+      </div>
+      

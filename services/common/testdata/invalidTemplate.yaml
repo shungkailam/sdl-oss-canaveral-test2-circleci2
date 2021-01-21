@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: web-content
+  annotations:
+    nutanix.com/edge: "{{bacfunc .EdgeName}}"
+data:
+  index.html: |
+    EdgeName={{.EdgeName}}
+    EdgeID={{.EdgeID}}
+    AppID={{.AppID}}
+    AppName={{.AppName}}
+    AppVersion={{.AppVersion}}
+    ProjectName={{.ProjectName}}
+    ProjectID={{.ProjectID}}
+    TestEdgeCategory={{.Categories.TestEdgeCategory}}

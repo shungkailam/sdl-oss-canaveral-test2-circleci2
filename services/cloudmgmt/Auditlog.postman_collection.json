@@ -1,0 +1,431 @@
+{
+	"info": {
+		"_postman_id": "e8a6184e-9d99-49f4-ba7c-3091f04c0090",
+		"name": "Auditlog",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "LoginAPI",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "fe35dfe6-66f5-446e-9858-62692525a47e",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable(\"token\", jsonData.token);",
+							"pm.globals.set(\"token\", jsonData.token);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"user-1@ntnxsherlock.com\",\n    \"password\": \"User-1-#\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://aditya.ntnxsherlock.com/v1.0/login",
+					"protocol": "https",
+					"host": [
+						"aditya",
+						"ntnxsherlock",
+						"com"
+					],
+					"path": [
+						"v1.0",
+						"login"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "test@ntnxsherlock.com",
+							"disabled": true
+						},
+						{
+							"key": "password",
+							"value": "test",
+							"disabled": true
+						}
+					]
+				},
+				"description": "Login request"
+			},
+			"response": []
+		},
+		{
+			"name": "MultipleFilters",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"termsKeyValue\": {\n        \"operationType\": {\n            \"values\": [\n                \"CREATE\",\n                \"UPDATE\"\n            ]\n        },\n        \"modifierName\": {\n            \"values\": [\n                \"user-2\"\n            ]\n        }\n    },\n    \"startTime\":\"1972-01-01T10:00:20.021Z\",\n    \"endTime\":\"2020-07-08T08:49:37.795337120Z\",\n    \"scopes\": [\n        \"INFRA\"\n    ]\n}"
+				},
+				"url": {
+					"raw": "https://aditya.ntnxsherlock.com/v1.0/auditlogsV2",
+					"protocol": "https",
+					"host": [
+						"aditya",
+						"ntnxsherlock",
+						"com"
+					],
+					"path": [
+						"v1.0",
+						"auditlogsV2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TenantAllDocuments",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"scopes\": [\n        \"INFRA\"\n    ]\n}"
+				},
+				"url": {
+					"raw": "https://aditya.ntnxsherlock.com/v1.0/auditlogsV2",
+					"protocol": "https",
+					"host": [
+						"aditya",
+						"ntnxsherlock",
+						"com"
+					],
+					"path": [
+						"v1.0",
+						"auditlogsV2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ModifierName",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"termsKeyValue\": {\n        \"modifierName\": {\n            \"values\": [\n                \"user-1\"\n            ]\n        }\n    },\n    \"scopes\": [\n        \"INFRA\"\n    ]\n}"
+				},
+				"url": {
+					"raw": "https://aditya.ntnxsherlock.com/v1.0/auditlogsV2",
+					"protocol": "https",
+					"host": [
+						"aditya",
+						"ntnxsherlock",
+						"com"
+					],
+					"path": [
+						"v1.0",
+						"auditlogsV2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ModifierID",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"termsKeyValue\": {\n        \"modifierID\": {\n            \"values\": [\n                \"21f10f33-c18c-4858-a74f-e4a9dd865e4a\"\n            ]\n        }\n    },\n    \"scopes\": [\n        \"INFRA\"\n    ]\n}"
+				},
+				"url": {
+					"raw": "https://aditya.ntnxsherlock.com/v1.0/auditlogsV2",
+					"protocol": "https",
+					"host": [
+						"aditya",
+						"ntnxsherlock",
+						"com"
+					],
+					"path": [
+						"v1.0",
+						"auditlogsV2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ResourceName",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"termsKeyValue\": {\n        \"resourceName\": {\n            \"values\": [\n                \"dummyResourceName\"\n            ]\n        }\n    },\n    \"scopes\": [\n        \"INFRA\"\n    ]\n}"
+				},
+				"url": {
+					"raw": "https://aditya.ntnxsherlock.com/v1.0/auditlogsV2",
+					"protocol": "https",
+					"host": [
+						"aditya",
+						"ntnxsherlock",
+						"com"
+					],
+					"path": [
+						"v1.0",
+						"auditlogsV2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ResourceType",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"termsKeyValue\": {\n        \"resourceType\": {\n            \"values\": [\n                \"Service Domain\"\n            ]\n        }\n    },\n    \"scopes\": [\n        \"INFRA\"\n    ]\n}"
+				},
+				"url": {
+					"raw": "https://aditya.ntnxsherlock.com/v1.0/auditlogsV2",
+					"protocol": "https",
+					"host": [
+						"aditya",
+						"ntnxsherlock",
+						"com"
+					],
+					"path": [
+						"v1.0",
+						"auditlogsV2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "OperationType",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"termsKeyValue\": {\n        \"operationType\": {\n            \"values\": [\n                \"CREATE\"\n            ]\n        }\n    },\n    \"scopes\": [\n        \"INFRA\"\n    ]\n}"
+				},
+				"url": {
+					"raw": "https://aditya.ntnxsherlock.com/v1.0/auditlogsV2",
+					"protocol": "https",
+					"host": [
+						"aditya",
+						"ntnxsherlock",
+						"com"
+					],
+					"path": [
+						"v1.0",
+						"auditlogsV2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "MultipleOperationType",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"termsKeyValue\": {\n        \"operationType\": {\n            \"values\": [\n                \"CREATE\",\n                \"UPDATE\"\n            ]\n        }\n    },\n    \"scopes\": [\n        \"INFRA\"\n    ]\n}"
+				},
+				"url": {
+					"raw": "https://aditya.ntnxsherlock.com/v1.0/auditlogsV2",
+					"protocol": "https",
+					"host": [
+						"aditya",
+						"ntnxsherlock",
+						"com"
+					],
+					"path": [
+						"v1.0",
+						"auditlogsV2"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

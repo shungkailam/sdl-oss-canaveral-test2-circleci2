@@ -1,0 +1,309 @@
+/* You can add global styles to this file, and also import other style files */
+@import url("./main.css");
+@import url("../node_modules/prism-reactjs/dist/index.css");
+
+main .main-sidebar-wrapper .main-sidebar .sidebar-group .sidebar-item:focus {
+  outline: none;
+}
+
+@font-face {
+  font-family: 'nutanix-soft-regular';
+  src: url("component-library/font/NutanixSoft-Regular.otf")format("opentype");
+  font-weight: 200;
+}
+@font-face {
+  font-family: 'nutanix-soft-medium';
+  src: url("component-library/font/NutanixSoft-Medium.otf")format("opentype");
+}
+@font-face {
+  font-family: 'nutanix-soft-regular';
+  src: url("component-library/font/NutanixSoft-Regular.otf")format("opentype");
+}
+@font-face {
+  font-family: 'nutanix-soft-bold';
+  src: url("component-library/font/NutanixSoft-Bold.otf")format("opentype");
+  
+}
+th,div{
+  font-family: 'nutanix-soft-medium' !important;
+}
+h1,h2,h3,h4,h5,h6{
+  font-family: 'nutanix-soft-medium' !important;
+}
+td,input,textarea,p {
+  font-family: nutanix-soft-regular !important;
+}
+
+.body-dashboard2 main .widget {
+  border-radius: 4px;
+  background-color: #fff;
+  box-shadow: inset 0 0 0 1px #d5dae0;
+  width: calc(100% / 2 - 20px);
+  height: 320px;
+  margin: 10px;
+  -webkit-transition: all .3s;
+  transition: all .3s;
+  box-shadow: inset 0 0 0 1px #f2f4f6, rgba(0, 0, 0, 0) 0 1px 1px, rgba(0, 0, 0, 0) 0 3px 3px, rgba(0, 0, 0, 0) 0 9px 9px;
+  cursor: pointer
+}
+
+.body-dashboard2 main .widget:hover {
+  box-shadow: inset 0 0 0 1px #e4e7eb, rgba(0, 0, 0, 0.02) 0 1px 1px, rgba(0, 0, 0, 0.02) 0 3px 3px, rgba(0, 0, 0, 0.02) 0 9px 9px
+}
+
+.ant-table-thead > tr > th {
+  background-color: #fcfcfc !important;
+}
+
+.high-contrast .nav-wide-dropdown .nav-column .nav-group .nav-item a,
+.high-contrast .nav-dropdown .nav-column .nav-group .nav-item a,
+.high-contrast .nav-side-dropdown .nav-column .nav-group .nav-item a {
+  color: #ccddee !important;
+}
+.high-contrast .nav-wide-dropdown .nav-column .nav-group .nav-item a:hover,
+.high-contrast .nav-dropdown .nav-column .nav-group .nav-item a:hover,
+.high-contrast .nav-side-dropdown .nav-column .nav-group .nav-item a:hover {
+  color: #fff !important;
+}
+
+.high-contrast .header .secondary-menu a {
+  color: #ccddee;
+}
+.high-contrast .header .secondary-menu a:hover {
+  color: #fff;
+}
+
+.high-contrast header .header .header-logo {
+  opacity: .95;
+}
+.high-contrast header .header .header-logo:hover {
+  opacity: 1;
+}
+
+.high-contrast header .header .header-search .search-box {
+  background-color: #99aabb;
+}
+.high-contrast header .header .header-search .search-box.focused {
+  background-color: #fff;
+}
+.high-contrast header .header .header-search .search-box:hover {
+  background-color: #aabbcc;
+}
+.high-contrast header .header .header-search .search-box.focused:hover {
+  background-color: #fff;
+}
+.high-contrast header .header .header-search .search-box .icon-search {
+  fill: #ccddee;
+}
+.high-contrast header .header .header-search .search-box .icon-search:hover {
+  fill: #fff;
+}
+
+.high-contrast header .header .header-hamburger-button .header-hamburger-button-slice,
+.high-contrast header .header .header-hamburger-button::before,
+.high-contrast header .header .header-hamburger-button::after {
+  background-color: #ccddee;
+}
+.high-contrast header .header .header-hamburger-button:hover .header-hamburger-button-slice,
+.high-contrast header .header .header-hamburger-button:hover::before,
+.high-contrast header .header .header-hamburger-button:hover::after {
+  background-color: #fff;
+}
+
+.high-contrast .nav-wide-dropdown .nav-column .nav-group .nav-item .icon,
+.high-contrast .nav-dropdown .nav-column .nav-group .nav-item .icon,
+.high-contrast .nav-side-dropdown .nav-column .nav-group .nav-item .icon {
+  fill: #ccddee !important;
+}
+.high-contrast .nav-wide-dropdown .nav-column .nav-group .nav-item:hover .icon,
+.high-contrast .nav-dropdown .nav-column .nav-group .nav-item:hover .icon,
+.high-contrast .nav-side-dropdown .nav-column .nav-group .nav-item:hover .icon {
+  fill: #fff !important;
+}
+
+.high-contrast .header .secondary-menu a .icon svg {
+  fill: #ccddee;
+}
+.high-contrast .header .secondary-menu a:hover .icon svg {
+  fill: #fff;
+}
+
+.high-contrast .icon-dashboard .icon-dashboard-dot {
+  background-color: #ccddee;
+}
+.high-contrast .icon-dashboard:hover .icon-dashboard-dot {
+  background-color: #fff;
+}
+.ant-popover-inner-content{
+  padding:0 !important;
+}
+.ant-popover-arrow{
+  display:none !important;
+}
+.cdk-overlay-container{
+  z-index:4 !important;
+}
+.ant-radio-group{
+  display: block !important;
+}
+.anticon-plus{
+  font-weight: bold;
+}
+
+.hide-confirm .ant-btn-primary {
+  display: none !important;
+}
+
+.editor-modal .ant-modal{
+  width: calc(100% - 60px) !important;
+  max-width: 900px !important;
+}
+.password .ant-checkbox{
+  display: none !important;
+}
+
+.script-step-width{
+  width: 45% !important;
+}
+
+.user-error-border > input{
+  box-shadow: inset 0 0 0 1px #9c0909, inset 0 2px 1px rgba(34,39,46,0.05), 0 0 0 0 rgba(34,165,247,0.15) !important;
+}
+.ant-menu-submenu-title{
+  padding:0 !important;
+}
+.ant-menu-item:active, .ant-menu-submenu-title:active {
+  background: none !important;
+}
+.ant-menu-inline .ant-menu-item{
+  height:32px !important;
+}
+
+.project-step-width{
+  width: 85% !important;
+}
+
+.project-description textarea{
+  border: none !important;
+}
+
+.nav-side-dropdown .ant-menu-submenu-inline > .ant-menu-submenu-title:after{
+  font-size: 15px !important;
+}
+
+.param-table-width{
+  overflow: scroll; 
+  max-height: calc(100vh - 300px);
+}
+.ant-select-dropdown-menu-item{
+  font-size: 14px !important;
+  padding: 5px 8px !important;
+}
+.ant-select-selection{
+  height: 32px !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  line-height: 20px !important;
+  border: 1px solid #b8bfca !important;
+}
+.ant-select{
+  height: 32px !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  line-height: 20px !important;
+  margin-top: 5px !important;
+  text-transform: capitalize;
+}
+.ant-select-focused .ant-select-selection, .ant-select-selection:focus, .ant-select-selection:active {
+  border-color: #49a9ee !important;
+}
+.summary h1{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.disablebuttons{
+  color:grey !important;
+  cursor: not-allowed !important;
+}
+
+.ant-menu-submenu-title{
+  line-height: 32px !important;
+  height: 32px !important;
+}   
+
+.ant-menu-submenu-open{
+  margin-bottom: 10px;
+}
+
+.ant-menu-submenu-open .ant-menu-submenu-title{
+  margin-bottom: 3px;
+}
+.nav-side-dropdown{
+  min-width: 250px !important;
+}
+
+input[type="email"]{
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  padding: 6px 10px;
+  -webkit-box-shadow: inset 0 0 0 1px #b8bfca, inset 0 2px 1px rgba(34,39,46,0.05), 0 0 0 0 rgba(34,165,247,0.15);
+  box-shadow: inset 0 0 0 1px #b8bfca, inset 0 2px 1px rgba(34,39,46,0.05), 0 0 0 0 rgba(34,165,247,0.15);
+  border: none;
+  border-radius: 4px;
+  outline: none;
+  width: 100%;
+  height: 32px;
+  position: relative;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+}
+input:focus {
+  box-shadow: inset 0 0 0 1px #22A5F7, inset 0 2px 1px rgba(34,39,46,0.05), 0 0 0 2px rgba(34,165,247,0.15);
+  -webkit-appearance: none;
+  outline: none;
+  border: none !important;
+}
+div:focus{
+  outline: none !important;
+}
+.table-container-options:after{
+  content: '\22EE';
+  font-size: 20px;
+  cursor:pointer;
+  padding-right:10px;
+}
+.table-container-options {
+  float:right;
+}
+.table-container-options-items{
+    border:solid 1px #bfbfbf;
+}
+.table-container-options-items p{
+  display:block;
+  cursor:pointer;
+  font-size:12px;
+  border: 0;
+  border-radius: 0 ;
+  color:#1a1a1b; 
+  box-shadow:none;
+
+}
+.table-container-options-items p:hover{
+  background-color:#108ee9 ;
+  color:white;
+}
+
+.confirm-warning .ant-alert-with-description{
+  color: #f09a18 !important;
+  padding: 10px !important;
+  width: 100%;
+}
+
+.confirm-warning .ant-alert-description{
+  font-size: 14px !important;
+}

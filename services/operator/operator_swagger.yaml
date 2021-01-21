@@ -1,0 +1,300 @@
+---
+swagger: '2.0'
+basePath: /v1
+schemes:
+- http
+#consumes:
+#  - application/keyauth.api.v1+json
+#produces:
+#  - application/keyauth.api.v1+json
+securityDefinitions:
+  isRegistered:
+    # This scheme uses the header: "Authorization: Basic {base64 encoded string defined by username:password}"
+    # Scopes are not supported with this type of authorization.
+    type: apiKey
+    in: header
+    name: Authorization
+
+info:
+  title: operator
+  version: 0.0.1
+  description: Sherlock Edge Host Configration APIs
+paths:
+  /ping:
+      get:
+        tags: [ "test" ]
+        summary: Test endpoint  
+        description: Test endpoint for liveness
+        operationId: ping
+        consumes:
+          - application/json
+        produces:
+          - application/json
+        parameters:
+          - name: X-Request-Id
+            in: header
+            type: string
+        responses:
+          200:
+            description: Successful operation
+            schema:
+              type: string
+              description: pong
+          default:
+            description: Generic error response
+            schema:
+              $ref: "#/definitions/Error"
+  /login:
+    post:
+      tags: [ "operator" ]
+      summary: Login
+      description: Login creds
+      operationId: login
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: LoginParams
+          description: Support dump parameters
+          required: true
+          schema:
+            $ref: "#/definitions/LoginParams"
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            $ref: "#/definitions/LoginResponse"
+            description: contains bearer token
+        default:
+          description: Generic error response
+          schema:
+            $ref: "#/definitions/Error"
+
+  /releases:
+      post:
+        tags: [ "edge" ]
+        security:
+          - isRegistered: []
+
+        summary: Upload release 
+        description: Uploads release to and adds to global upgrades table
+        operationId: uploadRelease
+        consumes:
+          - multipart/form-data
+        produces:
+          - application/json
+        parameters:
+          - in: formData
+            name: upgradeFiles
+            description: tgz of upgrade files
+            required: true
+            type: file
+          - in: formData
+            name: upgradeType
+            description: type of release, major, minor or bugfix
+            required: true
+            type: string
+            enum: [major, minor, bugfix]
+          - in: formData
+            name: changelog
+            description: describes the changes in the release
+            required: false
+            type: string
+        responses:
+          200:
+            description: Successful operation
+            schema:
+              type: string
+              description: contains release id
+          default:
+            description: Generic error response
+            schema:
+              $ref: "#/definitions/Error"
+      get:
+        tags: [ "edge" ]
+        security:
+          - isRegistered: []
+        summary: Get releases 
+        description: Gets the available releases
+        operationId: listReleases
+        consumes:
+          - application/json
+        produces:
+          - application/json
+       
+        responses:
+          200:
+            description: Successful operation
+            schema:
+              $ref: "#/definitions/ReleaseList"
+              description: contains all releases 
+         
+          default:
+            description: Generic error response
+            schema:
+              $ref: "#/definitions/Error"
+              
+  /releases/{releaseID}:
+      parameters:
+        - in: path
+          name: releaseID
+          description: Given id of an release 
+          required: true
+          type: string
+      get:
+        tags: [ "edge" ]
+        security:
+          - isRegistered: []
+
+        summary: Get release info given key
+        description: Get release info given key
+        operationId: getRelease
+        produces:
+          - application/json
+        responses:
+          200:
+            description: Successful operation
+            schema:
+              $ref: "#/definitions/ReleaseData"
+              description: contains release info
+          default:
+            description: Generic error response
+            schema:
+              $ref: "#/definitions/Error" 
+      put:
+        tags: [ "edge" ]
+        security:
+          - isRegistered: []
+
+        summary: Update release 
+        description: Update release
+        operationId: updateRelease
+        consumes:
+          - multipart/form-data
+        produces:
+          - application/json
+        parameters:
+          - in: formData
+            name: upgradeFiles
+            description: tgz of upgrade files
+            required: true
+            type: file
+          - in: formData
+            name: changelog
+            description: describes the changes in the release
+            required: false
+            type: string
+        responses:
+          200:
+            description: Successful operation
+            schema:
+              type: string
+              description: contains release id
+          default:
+            description: Generic error response
+            schema:
+              $ref: "#/definitions/Error"      
+      delete:
+        tags: [ "edge" ]
+        security:
+          - isRegistered: []
+
+        summary: Deletes release 
+        description: Deletes release with id
+        operationId: deleteRelease
+        produces:
+          - application/json
+        responses:
+          200:
+            description: Successful operation
+            schema:
+              type: string
+              description: contains release id
+          default:
+            description: Generic error response
+            schema:
+              $ref: "#/definitions/Error"      
+
+  /releases/{releaseID}/upgradecompatible:
+      parameters:
+          - in: path
+            name: releaseID
+            description: releaseID  to upgrade from
+            required: true
+            type: string
+      get:
+        security:
+          - isRegistered: []
+        tags: [ "edge" ]
+        summary: Lists all releases available or certain ones depending on version
+        description: Lists all releases available or certain ones depending on version number given
+        operationId: listCompatibleReleases
+        consumes:
+          - application/json
+        produces:
+          - application/json
+        responses:
+          200:
+            description: Successful operation
+            schema:
+              $ref: "#/definitions/ReleaseList"
+              description: contains release info
+          default:
+            description: Generic error response
+            schema:
+              $ref: "#/definitions/Error"
+              
+definitions:
+  Error:
+    type: object
+    required:
+      - Message
+    properties:
+      Message:
+        type: string
+
+  LoginParams:
+    type: object
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+  LoginResponse:
+    type: object
+    properties:
+      token:
+        type: string
+      
+
+  Release:
+    type: object
+    properties:
+      id:
+        type: string
+      changelog:
+        type: string
+      
+  ReleaseList:
+    type: array
+    items:
+      $ref: "#/definitions/Release"
+  
+  ReleaseData:
+    type: object
+    properties:
+      id:
+        type: string
+      data:
+        type: string
+        format: "byte"
+      changelog:
+        type: string
+      url:
+        type: string
+        
+  principal:
+      type: string
+

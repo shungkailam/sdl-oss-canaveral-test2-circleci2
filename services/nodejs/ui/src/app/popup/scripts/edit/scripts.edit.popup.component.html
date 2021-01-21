@@ -1,0 +1,119 @@
+<div class="script-edit-container">
+  <div class="item-a">
+    <div class="popup-title">Edit Script</div>
+    <div (click)="onClosePopup()" class="icon-star close-div">
+      <i class="fulldetail-close-button" title="Back">
+        <svg viewBox="0 792 2048 2048" class="svg-icon  -id-K">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#K"></use>
+        </svg>
+      </i>
+    </div>
+  </div>
+  <div class="item-a2">
+    <div class="steps-div">
+      <nz-steps [(nzCurrent)]="current">
+        <nz-step [nzTitle]="'General Information'"></nz-step>
+        <nz-step [nzTitle]="'Script'"></nz-step>
+      </nz-steps>
+    </div>
+  </div>
+  <div class="item-b">
+    <div class="content">
+      <div class="tab-container">
+        <div class="tab-item active" [class.active]="selectedTab === 'script'" (click)="showTab('script')">
+          Script
+        </div>
+        <div class="tab-item" [class.active]="selectedTab === 'properties'" (click)="showTab('properties')">
+          Properties
+        </div>
+      </div>
+
+      <div *ngIf="selectedTab === 'script'">
+        <div class="clearfix" style="margin-bottom: 10px;">
+          <div style="float: right;">
+            <a (click)="toggleUploadFile()">
+              <span>{{uploadFile ? 'Cancel Upload' : 'Upload New Version'}}</span>
+            </a>
+          </div>
+        </div>
+        <div *ngIf="!this.uploadFile">
+          <div class="theme-label">
+            Theme
+          </div>
+          <div class="theme-select">
+            <select [(ngModel)]="theme" (ngModelChange)="onChangeTheme()">
+              <option *ngFor="let thm of themes" value="{{thm.value}}" [selected]="theme === thm.value">{{thm.name}}</option>
+            </select>
+          </div>
+          <div *ngIf="showDiff" class="inline-option">
+            <input type="checkbox" id="inlineEditor" value="" [(ngModel)]="inline" (ngModelChange)="updateDiffRenderOption()">
+            <label for="inlineEditor">Show inline diff</label>
+          </div>
+          <div style="margin-top: 10px;">
+            <monaco-editor *ngIf="!showDiff" #monacoEditor [(ngModel)]="code" (ngModelChange)="updateDiffOption()" [language]="language"
+              [editorHeight]=400></monaco-editor>
+            <monaco-editor *ngIf="showDiff" #monacoDiffEditor [(ngModel)]="diffObj" [showDiff]="true" [language]="language" [editorHeight]=400></monaco-editor>
+          </div>
+          <div style="float: right; margin-top:20px;">
+            <button nz-button [disabled]="!canDiff" [nzType]="'primary'" (click)="displayDiffEditor()">
+              <span>{{showDiff ? 'Show Editor' : 'Show Diff'}}</span>
+            </button>
+          </div>
+        </div>
+        <div *ngIf="this.uploadFile">
+          <div class="input-group" style="margin-top:20px">
+            <div style="padding: 10px 0;">
+              Choose a new script file to upload. This script will relace the existing version.
+            </div>
+            <input type="file" name="scriptfile" size="80" (change)="handleFileSelect($event)">
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="selectedTab === 'properties'" style="width:450px;">
+        <div class="input-group" style="margin-top:20px">
+          <div>
+            Language
+          </div>
+          <div>
+            <select [(ngModel)]="language" style="width: 100%; border: 1px solid #cccccc;">
+              <option value="" disabled [selected]="language === ''">Select...</option>
+              <option *ngFor="let lang of languages" value="{{lang}}" [selected]="language === lang">{{lang}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="input-group">
+          <div>
+            Type
+          </div>
+          <nz-radio-group [(ngModel)]="radioValue">
+            <label nz-radio [nzValue]="'lambda'">
+              <span>Lambda</span>
+            </label>
+            <label nz-radio [nzValue]="'transformation'">
+              <span>Transformation</span>
+            </label>
+          </nz-radio-group>
+        </div>
+        <div class="input-group" style="margin-top:20px">
+          <div>
+            Description
+          </div>
+          <textarea style="height:95px;">
+          </textarea>
+        </div>
+      </div>
+
+      <div style="margin-top: 60px;">
+        <div style="float: right;">
+          <button nz-button [disabled]="isUpdateDisabled()" [nzType]="'primary'" [nzLoading]="isConfirmLoading" (click)="onUpdateScript()">
+            <span>Save</span>
+          </button>
+          <button nz-button style="margin-left: 10px;" (click)="onClosePopup()">
+            <span>Cancel</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,92 @@
+:host {
+  width: 100%;
+}
+
+svg {
+  background-color: beige;
+}
+
+path {
+  fill: none;
+}
+
+path.link2 {
+  fill: none;
+  stroke: #555;
+  stroke-opacity: 0.4;
+  stroke-width: 1.5px;
+}
+
+.a-block {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background-color: cyan;
+}
+
+.d-box {
+  display: flex;
+  width: 300px;
+  justify-content: space-between;
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 1px #d6dbe0;
+  margin-bottom: 40px;
+}
+
+.d-box .type-btn {
+  color: #22A5F7;
+  border-color: #d3edfd;
+}
+
+.d-box .label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.d-box .badge-container {
+  min-width: 20px;
+  height: 20px;
+  background-color: #f6f7f8;
+  color: #9ca7b4;
+  border-radius: 10px;
+  margin-top: 1px;
+  padding-right: 6px;
+}
+
+.d-box .badge-content {
+  display: inline-block;
+  margin-left: 6px;
+  margin-top: 2px;
+}
+
+.d-box .anticon {
+  margin-top: 7px;
+}
+
+.d-box .anticon:hover,
+.icons .anticon:hover{
+  color: #22a5f7;
+}
+
+.sect-title {
+  font-size: 18px;
+  font-weight: 200;
+  margin-bottom: 20px;
+  line-height: 12px;
+}
+
+.icons {
+  margin-bottom: 10px;
+}
+
+.viz .icons .anticon {
+  margin-right: 15px;
+}
+
+.column-container {
+  width: 300px;
+  margin-top: 30px;
+  z-index: 1;
+}

@@ -1,0 +1,167 @@
+{
+  "securityDefinitions": {
+    "BearerToken": {
+      "description": "Bearer Token authentication",
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    }
+  },
+  "definitions": {
+    "NotificationTopics": {
+      "enum": [
+        "reportEdge",
+        "onDeleteEdge",
+        "onUpdateEdge",
+        "reportEdgeCluster",
+        "onUpdateEdgeCluster",
+        "onDeleteEdgeCluster",
+        "reportSensors",
+        "reportEdgeInfo",
+        "application-status",
+        "onCreateApplication",
+        "onDeleteApplication",
+        "onUpdateApplication",
+        "onGetApplicationContainers",
+        "onCreateCategory",
+        "onDeleteCategory",
+        "onUpdateCategory",
+        "onCreateDataSource",
+        "onDeleteDataSource",
+        "onUpdateDataSource",
+        "onCreateDockerProfile",
+        "onDeleteDockerProfile",
+        "onUpdateDockerProfile",
+        "onCreateScript",
+        "onDeleteScript",
+        "onUpdateScript",
+        "onCreateScriptRuntime",
+        "onDeleteScriptRuntime",
+        "onUpdateScriptRuntime",
+        "onCreateDataStream",
+        "onDeleteDataStream",
+        "onUpdateDataStream",
+        "onGetDataPipelineContainers",
+        "onCreateCloudCreds",
+        "onDeleteCloudCreds",
+        "onUpdateCloudCreds",
+        "onCreateProject",
+        "onDeleteProject",
+        "onUpdateProject",
+        "onCreateMLModel",
+        "onDeleteMLModel",
+        "onUpdateMLModel",
+        "logUpload",
+        "logStream",
+        "logUploadComplete",
+        "executeEdgeUpgrade",
+        "setupSSHTunneling",
+        "teardownSSHTunneling",
+        "onCreateProjectService",
+        "onDeleteProjectService",
+        "onUpdateProjectService",
+        "onCreateLogCollector",
+        "onDeleteLogCollector",
+        "onUpdateLogCollector",
+        "onCreateSoftwareUpdate",
+        "onUpdateSoftwareUpdate",
+        "onCreateServiceInstance",
+        "onUpdateServiceInstance",
+        "onDeleteServiceInstance",
+        "onCreateServiceBinding",
+        "onDeleteServiceBinding",
+        "onCreateDataDriverInstance",
+        "onUpdateDataDriverInstance",
+        "onDeleteDataDriverInstance",
+        "httpProxy"
+      ],
+      "type": "string"
+    },
+    "LogUploadStatus": {
+      "enum": ["PENDING", "SUCCESS", "FAILED", "TIMEDOUT"],
+      "type": "string"
+    },
+    "LogCollectorStatus": {
+      "enum": ["ACTIVE", "STOPPED", "FAILED"],
+      "type": "string"
+    },
+    "LogCollectorType": {
+      "enum": ["Infrastructure", "Project"],
+      "type": "string"
+    },
+    "LogCollectorDestination": {
+      "enum": ["CLOUDWATCH", "KINESIS", "FIREHOSE", "STACKDRIVER"],
+      "type": "string"
+    },
+    "EventType": {
+      "enum": ["ALERT", "STATUS", "METRIC"],
+      "type": "string"
+    },
+    "SoftwareUpdateStateType": {
+      "enum": ["DOWNLOAD", "DOWNLOADING", "DOWNLOAD_CANCEL", "DOWNLOAD_CANCELLED", "DOWNLOAD_FAILED", "DOWNLOADED", "UPGRADE", "UPGRADING", "UPGRADE_FAILED", "UPGRADED"],
+      "type": "string"
+    },
+    "SoftwareUpdateBatchType": {
+      "enum": ["DOWNLOAD", "UPGRADE"],
+      "type": "string"
+    },
+    "SoftwareUpgradeCommand": {
+      "enum": ["UPGRADE"],
+      "type": "string"
+    },
+    "SoftwareDownloadCommand": {
+      "enum": ["DOWNLOAD", "DOWNLOAD_CANCEL"],
+      "type": "string"
+    },
+    "SoftwareUpdateCredentialsAccessType": {
+      "enum": ["AWS", "DOCKER","AWS_ECR"],
+      "type": "string"
+    },
+    "ServiceClassScopeType": {
+      "enum": ["SERVICEDOMAIN", "PROJECT"],
+      "type": "string"
+    },
+    "ServiceClassStateType": {
+      "enum": ["FINAL", "DRAFT", "DEPRECATED"],
+      "type": "string"
+    },
+    "ServiceInstanceStateType": {
+      "enum": [
+        "PROVISIONING",
+        "PROVISIONED",
+        "FAILED"
+      ],
+      "type": "string"
+    },
+    "ServiceBindingStateType": {
+      "enum": [
+        "PROVISIONING",
+        "PROVISIONED",
+        "FAILED"
+      ],
+      "type": "string"
+    },
+    "ServiceBindingResourceType": {
+      "enum": [
+        "SERVICEDOMAIN",
+        "PROJECT"
+      ],
+      "type": "string"
+    },
+    "DataDriverClassType": {
+      "enum": [
+        "SOURCE",
+        "SINK",
+        "BOTH"
+      ],
+      "type": "string"
+    },
+    "DataDriverStreamDirection": {
+      "enum": [
+        "SOURCE",
+        "SINK"
+      ],
+      "type": "string"
+    }
+  }
+}

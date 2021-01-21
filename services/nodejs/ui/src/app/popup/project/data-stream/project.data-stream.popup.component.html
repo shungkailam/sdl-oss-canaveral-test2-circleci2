@@ -1,0 +1,84 @@
+<div style="width:100%; height:100%;font-size:14px;" class="container">
+  <div class="item-a">
+    <div style="font-size:20px;padding:15px;">Create Data Stream</div>
+    <div (click)="onClosePopup()" class="icon-star" style="width: 15px;height: 15px; position: absolute; top: 20px; right: 20px;cursor: pointer;color:#444444;fill:#444444;">
+      <i class="fulldetail-close-button" title="Back">
+        <svg viewBox="0 792 2048 2048" class="svg-icon  -id-K">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#K"></use>
+        </svg>
+      </i>
+    </div>
+  </div>
+  <div class="item-b">
+    <div class="col-title"><span>Data</span></div>
+    <div class="panel">
+      <div class="panel-title"><span>Data Source 1</span></div>
+      <div class="panel-body">
+        <div>
+          <div class="select-label">Source</div>
+          <div class="select-box">
+            <select>
+              <option value="sensors">Sensors</option>
+              <option value="existing stream">Existing Stream</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="item-bc">
+    <div style="width:100%; height:2px;background-color:#39c3f0;position:absolute;top:100px;"></div>
+  </div>
+  <div class="item-c">
+    <div class="col-title"><span>Processing</span></div>
+    <div class="panel">
+      <div class="panel-title">Processing Modules</div>
+      <div class="panel-body">
+        <div style="padding: 20px 0; color: #aaaaaa;">
+          No Processing Modules
+        </div>
+
+      </div>
+      <div class="panel-footer">
+        <a>Add Processing Module</a>
+      </div>
+    </div>
+  </div>
+  <div class="item-cd">
+    <div style="width:100%; height:2px;background-color:#39c3f0;position:absolute;top:100px;"></div>
+  </div>
+  <div class="item-d">
+    <div class="col-title">Publish</div>
+    <div class="panel">
+      <div class="panel-title">General</div>
+      <div class="panel-body">
+        <div class="select-label">Destination</div>
+        <div class="select-box">
+          <select>
+            <option value="sensors">Sensors</option>
+            <option value="existing stream">Existing Stream</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div style="height:40px;width:100%;position:relative;">
+      <div style="width:2px;height:100%;position:absolute;left:159px;background-color:#39c3f0;"></div>
+    </div>
+
+    <div class="panel" xx-style="margin-top:40px;">
+      <div class="panel-title"><span>Data</span></div>
+      <div class="panel-body">
+        <div>
+          <div class="select-label" style="margin-bottom: 10px;">Stream Name</div>
+          <div class="select-box">
+            <input type="text" placeholder="Type to Enter Name" style="width: 100%;">
+          </div>
+        </div>
+      </div>
+      <div class="panel-body-bt select-label">
+        <div>Fields</div>
+        <div style="margin-top:10px;color:#aaaaaa;">Specify a data source to add fields</div>
+      </div>
+    </div>
+  </div>
+</div>

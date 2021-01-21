@@ -1,0 +1,34 @@
+# Docker file used to run swagger to generate swagger.json
+#
+# We use goswagger/swagger docker image as base since
+# spec gen works properly only for master build,
+# not for the current release (0.13) build.
+#
+# It would have been much simpler if we could run
+# goswagger docker image as a container directly over
+# our source code, however, it appears goswagger has
+# trouble with dep / vendor, so as a workaround,
+# we run swagger spec gen inside the docker image
+# by removing the vendor dir and install all needed
+# golang packages in the container
+#
+# The container will write swagger.json to /output/ dir.
+# So to receive it from host we just need to mount some
+# host directory to container /output/
+# See the script: gen_swagger.sh
+
+FROM quay.io/goswagger/swagger
+
+ENV GOPATH /go
+
+RUN mkdir -p /go/src/cloudservices/cloudmgmt
+RUN mkdir -p /go/src/cloudservices/vendor
+ADD ./cloudmgmt /go/src/cloudservices/cloudmgmt
+ADD ./vendor /go/src/cloudservices/vendor
+RUN chmod +x /go/src/cloudservices/cloudmgmt/swagger_script.sh
+
+WORKDIR /go/src/cloudservices/cloudmgmt
+
+
+ENTRYPOINT ["/bin/sh"]
+CMD ["/go/src/cloudservices/cloudmgmt/swagger_script.sh"]

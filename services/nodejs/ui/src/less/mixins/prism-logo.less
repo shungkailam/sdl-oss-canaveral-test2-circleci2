@@ -1,0 +1,61 @@
+// CSS for Prism Logo
+
+.prism-logo () {
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-size: 38px;
+  font-weight: @fontWeightRegular;
+  color: @white_1;
+  cursor: default;
+
+  span {
+    // P
+    &:nth-child(1) {
+      color: @white_1;
+    }
+    // R
+    &:nth-child(2) {
+      color: @blue_6;
+    }
+    // I
+    &:nth-child(3) {
+      color: @blue_5;
+    }
+    // S
+    &:nth-child(4) {
+      color: @blue_4;
+    }
+    // M
+    &:nth-child(5) {
+      color: @blue_3;
+    }
+    &:nth-child(6) {
+      color: @blue_2;
+    }
+    &:nth-child(7) {
+      color: @blue_7;
+    }
+    &:nth-child(8) {
+      color: @blue_1;
+    }
+  }
+
+  // @override for custom text
+  &.custom {
+    span {
+      &:nth-child(-n+5) {
+        color: @white_1;
+      }
+    }
+  }
+
+  &.small {
+    font-size: 30px;
+    font-weight: @fontWeightMedium;
+  }
+
+  &.-animate {
+    .mx-animation-name(slidein);
+    .mx-animation-duration(0.8s);
+  }
+}

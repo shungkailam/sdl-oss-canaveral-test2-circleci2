@@ -1,0 +1,61 @@
+syntax = "proto3";
+import "google/protobuf/timestamp.proto";
+
+package api;
+
+service EventService {
+    rpc UpsertEvents(UpsertEventsRequest) returns (stream Event) {
+    }
+
+    rpc QueryEvents(QueryEventsRequest) returns (stream Event) {
+
+    }
+
+    rpc DeleteEvents(DeleteEventsRequest) returns (DeleteEventsResponse) {
+
+    }
+}
+
+message Metrics {
+    map<string, double> counters = 1;
+    map<string, double> gauges = 2;
+}
+
+message Event {
+    google.protobuf.Timestamp  timestamp = 1;
+	string id = 2;
+    string path = 3;
+    string type = 4;
+    string state = 5;
+    string sourceType = 6;
+    string message = 7;
+    string version = 8;
+    string severity = 9;
+    map<string, string> properties = 10;
+    string projectID = 11;
+    Metrics metrics = 12;
+    bool isEncrypted = 13;
+    bool isInfraEntity = 14;
+    string audience = 15;
+}
+
+message UpsertEventsRequest {
+    repeated Event events = 1;
+}
+
+message QueryEventsRequest {
+    string path = 1;
+	map<string, string> keys = 2;
+    int32 start = 3;
+    int32 size = 4;
+    google.protobuf.Timestamp startTime = 5;
+    google.protobuf.Timestamp endTime = 6;
+}
+
+message DeleteEventsRequest {
+    string index = 1;
+}
+
+message DeleteEventsResponse {
+    
+}

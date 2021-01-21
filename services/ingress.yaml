@@ -1,0 +1,12 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: cloudmgmt-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: cloudmgmt-global-ip
+    kubernetes.io/ingress.allow-http: "false"
+    ingress.gcp.kubernetes.io/pre-shared-cert: "sherlock-cloudmgmt-cert"
+spec:
+  backend:
+    serviceName: cloudmgmt-svc
+    servicePort: 3000

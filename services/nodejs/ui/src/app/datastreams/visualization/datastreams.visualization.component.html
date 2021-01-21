@@ -1,0 +1,130 @@
+<div class="viz"
+     (window:resize)="onResize($event)"
+     style="display: flex; justify-content: space-around; position: relative; height:calc(100vh - 60px);">
+  <div class="d3-chart" style="position: absolute; top: 0; left: 0; width:100%; height:2850px;" #chart></div>
+  <div class="column-container">
+    <div class="sect-title">Data Sources</div>
+    <div class="icons">
+      <nz-tooltip [nzTitle]="'Search'">
+        <span nz-tooltip>
+          <i class="anticon anticon-search"></i>
+        </span>
+      </nz-tooltip>
+
+      <nz-tooltip [nzTitle]="'Group'">
+        <span nz-tooltip>
+          <i class="anticon anticon-appstore-o"></i>
+        </span>
+      </nz-tooltip>
+      <nz-tooltip [nzTitle]="'Color'">
+        <span nz-tooltip>
+          <i class="anticon anticon-setting"></i>
+        </span>
+      </nz-tooltip>
+      <nz-dropdown>
+        <span class="ant-dropdown-link" nz-dropdown>
+          <nz-tooltip [nzTitle]="'Filter'">
+            <span nz-tooltip>
+              <i class="anticon anticon-filter"></i>
+            </span>
+          </nz-tooltip>
+        </span>
+        <ul nz-menu>
+          <li *ngFor="let edge of edges; let i = index" nz-menu-item>
+            <label nz-checkbox [(ngModel)]="edgeFilters[i].selected" (ngModelChange)="checkEdgeFilters($event)">
+              <a>{{edge.name}}</a>
+            </label>
+          </li>
+        </ul>
+      </nz-dropdown>
+    </div>
+    <div>
+    </div>
+    <div *ngFor="let ds of datasources; let i = index"
+         (mouseover)="onMouseOverDataSource($event, ds, i)"
+         (mouseout)="onMouseOutDataSource($event, ds, i)"
+         id="{{'d-' + ds.id}}" class="d-box">
+      <div><button nz-button [nzSize]="'small'" class="type-btn">{{datasourcesGroupBy}}</button></div>
+      <div class="label">{{ds.name}}</div>
+      <div></div>
+      <div class="badge-container">
+        <div class="badge-content">{{ds.count || 2000}}</div>
+      </div>
+      <div><i class="anticon anticon-down"></i></div>
+    </div>
+  </div>
+  <div class="column-container">
+    <div class="sect-title">Data Streams on Edge</div>
+    <div class="icons">
+      <nz-tooltip [nzTitle]="'Search'">
+        <span nz-tooltip>
+          <i class="anticon anticon-search"></i>
+        </span>
+      </nz-tooltip>
+      <nz-tooltip [nzTitle]="'Group'">
+        <span nz-tooltip>
+          <i class="anticon anticon-appstore-o"></i>
+        </span>
+      </nz-tooltip>
+      <nz-tooltip [nzTitle]="'Color'">
+        <span nz-tooltip>
+          <i class="anticon anticon-setting"></i>
+        </span>
+      </nz-tooltip>
+      <nz-tooltip [nzTitle]="'Filter'">
+        <span nz-tooltip>
+          <i class="anticon anticon-filter"></i>
+        </span>
+      </nz-tooltip>
+    </div>
+    <div *ngFor="let ds of edgeDatastreams; let i = index" id="{{'ds-' + ds.id}}"
+         (mouseover)="onMouseOverEdgeDataStream($event, ds, i)"
+         (mouseout)="onMouseOutEdgeDataStream($event, ds, i)"
+         class="d-box">
+      <div><button nz-button [nzSize]="'small'" class="type-btn">{{datastreamsGroupBy}}</button></div>
+      <div class="label">{{ds.name}}</div>
+      <div></div>
+      <!--<div class="badge-container">-->
+        <!--<div class="badge-content">{{ds.count || 2}}</div>-->
+      <!--</div>-->
+      <div><i class="anticon anticon-down"></i></div>
+    </div>
+  </div>
+  <div class="column-container">
+    <div class="sect-title">Data Streams on Cloud</div>
+    <div class="icons">
+      <nz-tooltip [nzTitle]="'Search'">
+        <span nz-tooltip>
+          <i class="anticon anticon-search"></i>
+        </span>
+      </nz-tooltip>
+      <nz-tooltip [nzTitle]="'Group'">
+        <span nz-tooltip>
+          <i class="anticon anticon-appstore-o"></i>
+        </span>
+      </nz-tooltip>
+      <nz-tooltip [nzTitle]="'Color'">
+        <span nz-tooltip>
+          <i class="anticon anticon-setting"></i>
+        </span>
+      </nz-tooltip>
+      <nz-tooltip [nzTitle]="'Filter'">
+        <span nz-tooltip>
+          <i class="anticon anticon-filter"></i>
+        </span>
+      </nz-tooltip>
+    </div>
+    <div *ngFor="let ds of cloudDatastreams; let i = index" id="{{'dsc-' + ds.id}}"
+         (mouseover)="onMouseOverCloudDataStream($event, ds, i)"
+         (mouseout)="onMouseOutCloudDataStream($event, ds, i)"
+         class="d-box">
+      <div><button nz-button [nzSize]="'small'" class="type-btn">{{datastreamsGroupBy}}</button></div>
+      <div class="label">{{ds.name}}</div>
+      <div></div>
+      <!--<div class="badge-container">-->
+        <!--<div class="badge-content">{{ds.count || 2}}</div>-->
+      <!--</div>-->
+      <div><i class="anticon anticon-down"></i></div>
+    </div>
+  </div>
+</div>

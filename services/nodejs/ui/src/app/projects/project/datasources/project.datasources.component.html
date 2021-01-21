@@ -1,0 +1,55 @@
+<div class="right-panel">
+    <div *ngIf="data.length !== 0">
+      <div class="table-container">
+        <nz-table #nzTable [nzDataSource]="data" [nzPageSize]="10" (nzDataChange)="_displayDataChange($event)" [nzCustomNoResult]="true"
+          (nzPageIndexChange)="_refreshStatus()" (nzPageSizeChange)="_refreshStatus()">
+          <thead nz-thead>
+            <tr>
+              <th nzDisabled nz-th [nzCheckbox]="true">
+                <label nz-checkbox [(ngModel)]="_allChecked" [nzIndeterminate]="_indeterminate" (ngModelChange)="_checkAll($event)">
+                </label>
+              </th>
+              <th nz-th *ngFor="let col of columns">
+                <span>{{col}}</span>
+                <nz-table-sort [(nzValue)]="sortMap[col]" (nzValueChange)="sort(col,$event)"></nz-table-sort>
+              </th>
+              <th nz-th></th>
+            </tr>
+          </thead>
+          <tbody nz-tbody>
+            <tr nz-tbody-tr *ngFor="let data of nzTable.data">
+              <td nzDisabled nz-td [nzCheckbox]="true">
+                <label nz-checkbox [(ngModel)]="data.checked" (ngModelChange)="_refreshStatus($event)">
+                </label>
+              </td>
+              <td nz-td>{{data.name}}</td>
+              <td nz-td>{{data.type}}</td>
+              <td nz-td>{{data.edgeName}}</td>
+              <td nz-td>{{data.fieldsCount}}</td>
+              <td nz-td class="categories-table-container-options-column">
+                <nz-popover [nzPlacement]="'leftTop'" [nzTrigger]="'hover'">
+                  <div nz-td nz-popover class="table-container-options"></div>
+                  <ng-template #nzTemplate>
+                    <div class="table-container-options-items">
+                      <nz-radio-group [(ngModel)]="_rowIndex" (ngModelChange)="_refreshStatus($event)" *ngFor="let option of tableRowEditingOptions; index as i">
+                          <p *ngIf= "i === 1 || i === 2" [ngClass]= "i === 2 ? 'disablebuttons' : ''"  nz-radio-button [nzValue]="data.id" (click)= "i === 2 ? false : option.action($event)">{{option.label}}</p>
+                      </nz-radio-group>
+                    </div>
+                  </ng-template>
+                </nz-popover>
+              </td>
+            </tr>
+          </tbody>
+          <div noResult>No Data</div>
+        </nz-table>
+      </div>
+    </div>
+    <div *ngIf="data.length === 0 && !isLoading" class="center-container">
+      <div class="center-item">
+        <div>No Data Sources associated with current Project.</div>
+      </div>
+    </div>
+    <div *ngIf="data.length === 0 && isLoading" class="center-container">
+      <nz-spin></nz-spin>
+    </div>
+  </div>

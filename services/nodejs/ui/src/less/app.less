@@ -1,0 +1,977 @@
+//
+// Copyright (c) 2015 Nutanix Inc. All rights reserved.
+//
+// Styles used for the login page.
+//
+
+// App Login Loader
+// ----------------
+
+@import "variables.less";
+@import "lesshat.less";
+@import "login-elements.less";
+@import "mixins-legacy.less";
+@import "mixins/size.less";
+@import "mixins/prism-logo.less";
+
+.n-content-wrapper {
+  .vertical-centered-box {
+    .size(100%);
+
+    position: absolute;
+    text-align: center;
+
+    &::after {
+      content: '';
+      display: inline-block;
+      height: 100%;
+      vertical-align: middle;
+      margin-right: -0.25em;
+    }
+  }
+
+  .prism-loader {
+    @size: 120px;
+    @color: @white_1;
+
+    .vh-positioner(@size) {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      margin-left: -(@size / 2);
+      margin-top: -(@size / 2);
+    }
+
+    transition: all 0.5s cubic-bezier(0.6, -0.28, 0.74, 0.05);
+    position: relative;
+    box-sizing: border-box;
+    display: inline-block;
+    vertical-align: middle;
+    text-align: left;
+    font-size: 0;
+
+    &.fade-out {
+      opacity: 0;
+    }
+
+    > .loader-circle {
+      .size(@size);
+      .vh-positioner(@size);
+
+      border-radius: 50%;
+      box-shadow: inset 0 0 0 1px fade(@color, 10%);
+    }
+
+    > .loader-line-mask {
+      @keyframes prism-loader-rotate {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      .size((@size / 2),@size);
+      .vh-positioner(@size);
+
+      overflow: hidden;
+      transform-origin: (@size / 2) (@size / 2);
+      animation: prism-loader-rotate 1.2s infinite linear;
+
+      > .loader-line {
+        .size(@size);
+
+        border-radius: 50%;
+        box-shadow: 0 1px 0 fade(@color, 50%) inset;
+      }
+    }
+  }
+}
+
+// Particleground Styles
+// ---------------------
+
+.login-background,
+.n-particle-view {
+  background-image: linear-gradient(-134deg, @particles-gradient-start 0%, @particles-gradient-end 98%);
+
+  .particles-gradient,
+  #particles-foreground,
+  #particles-background,
+  & {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: absolute;
+  }
+
+  // Loading animation
+  #particles-foreground,
+  #particles-background {
+    &.fade-in {
+      @keyframes fade-in-particles {
+        0% {
+          opacity: 0;
+          transform: scale(2);
+        }
+
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      animation: fade-in-particles 1s ease-out;
+    }
+  }
+
+  .particles-gradient {
+    &.fade-in {
+      @keyframes fade-in-particle-bg {
+        0%,
+        20% {
+          opacity: 0;
+          transform: scale(2);
+        }
+
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      animation: fade-in-particle-bg 2.5s ease-out;
+    }
+  }
+}
+
+.n-particle-view {
+  position: relative;
+}
+
+.login-background {
+  position: fixed;
+}
+
+// Login Page Styles
+// -----------------
+
+#n-login-wrapper {
+  &.loaded {
+    > .bottom-left,
+    > .bottom-right {
+      @keyframes login-fade-in-o {
+        0% { opacity: 0; }
+        100% { opacity: 1; }
+      }
+
+      opacity: 1;
+      animation: login-fade-in-o 0.35s cubic-bezier(0.39, 0.58, 0.57, 1);
+    }
+  }
+
+  #n-ctr-login {
+    // @local login page mixin
+    .login-alert() {
+      background: fade(@black_1, 80%);
+      border: none;
+      text-shadow: none;
+    }
+
+    background: @black_1;
+
+    // Reset bootstrap
+    input {
+      background-color: transparent;
+      border: none;
+      border-radius: none;
+      box-shadow: none;
+      transition: none;
+      display: inline-block;
+      height: auto;
+      padding: 0;
+      margin: 0;
+      vertical-align: baseline;
+      font-family: @baseFont;
+      font-weight: @fontWeightMedium;
+      line-height: normal;
+      color: fade(@white_1, 80%);
+      font-size: 24px; /* shyan */
+
+      &::placeholder {
+        color: fade(@white_1, 30%);
+      }
+    }
+
+    // End reset bootstrap
+
+    // Remove IE10 pseudo clear button
+    #inputUsername::-ms-clear {
+      display: none;
+    }
+
+    #inputPassword::-ms-clear {
+      display: none;
+    }
+
+    .animateFocus {
+      transition: all 0.48s;
+    }
+
+    #inputPassword {
+      + label .donut-loader {
+        // Inner circle color:
+        //   1) Mix FG and BG gradients together.
+        //   2) Then, take 90% of that value and then add white which
+        //      represents the 90% transparent input that is currently used.
+        //.donut-loader-large(
+        //  @blue_2,
+        //  mix(
+        //    mix(@particles-gradient-start, @particles-gradient-end, 50%),
+        //    @white_1,
+        //    90%
+        //  )
+        //);
+
+        margin: 5px;
+
+        &::after {
+          transition: all 0.4s;
+        }
+      }
+
+      &:focus + label {
+        .loginSubmitArrow {
+          path {
+            fill: @black_1;
+          }
+
+          &.active {
+            opacity: 0.4;
+          }
+        }
+
+        .donut-loader {
+          &::after {
+            background-color: darken(@white_1, 10%);
+          }
+        }
+      }
+    }
+
+    // Container for welcome banner on login screen
+    #welcomeBannerSection {
+      display: none;
+      position: absolute;
+      z-index: @welcome-banner-section-z-index;
+      top: 50%;
+      left: 50%;
+      margin-left: (-520px / 2);
+      margin-top: (-490px / 2 );
+      text-align: center;
+      animation-name: slidein;
+      animation-duration: 0.75s;
+
+      .alert-error {
+        .login-alert;
+
+        display: none;
+        text-align: center;
+        position: relative;
+        z-index: @alert-login-z-index;
+        max-width: 250px;
+        min-width: 150px;
+        margin: 30px auto 0;
+        padding: 8px 10px;
+        color: @red_3;
+      }
+    }
+
+    // Main login form container
+    .form-login {
+      display: none;
+      position: absolute;
+      z-index: @form-login-z-index;
+      top: 50%;
+      left: 0;
+      right: 0;
+      margin: (-250px / 2 ) auto 0;
+
+      // Overrides for the margin-top
+      &.form-section-override {
+        margin-top: (-380px / 2 );
+      }
+
+      > .n-login-form {
+        text-align: center;
+
+        > .login-controls {
+          display: inline-block;
+        }
+      }
+
+      .n-login-help {
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        > span {
+          opacity: 0.5;
+          font-size: 13px;
+          font-weight: normal;
+          color: @white_1;
+
+          &:hover {
+            opacity: 1;
+            cursor: pointer;
+          }
+        }
+      }
+
+      .alert-error,
+      .alert-success,
+      .alert-info {
+        .login-alert;
+
+        text-align: center;
+        padding: 8px 10px;
+      }
+
+      .alert-error {
+        color: @red_3;
+      }
+
+      .alert-success {
+        color: @green_1;
+      }
+
+      .alert-info {
+        color: @blue_1;
+      }
+
+      // Specific to default login
+      > .alert-error,
+      > .alert-success,
+      > .alert-info {
+        display: none;
+        position: relative;
+        z-index: @alert-login-z-index;
+        max-width: 485px;
+        min-width: 150px;
+        margin: 0 auto;
+        margin-top: 20px;
+        box-sizing: border-box;
+      }
+
+      // Prism login logo
+      > .prism-logo {
+        .prism-logo;
+        .prism-logo.-animate;
+
+        margin-bottom: 32px;
+        text-align: center;
+      }
+
+      .login-controls {
+        > div {
+          .login-input-container;
+
+          animation-name: slidein_2;
+          animation-duration: 1s;
+          width: 485px;
+        }
+
+        > .company-text {
+          margin-top: 35px;
+          text-align: center;
+          font-size: 13px;
+          font-weight: @fontWeightMedium;
+          color: fade(@white_1, 50%);
+        }
+
+        > .login-instructions {
+          color: @white_1;
+          font-size: 16px;
+          text-align: center;
+          margin: 25px auto;
+        }
+
+        .help-text {
+          font-size: 12px;
+          color: @white_1;
+          text-align: left;
+        }
+      }
+
+      .loginLinks {
+        a {
+          color: @white_1;
+          font-size: 16px;
+          text-decoration: none;
+          opacity: 0.5;
+
+          &:hover {
+            color: @white_1;
+            opacity: 1;
+          }
+        }
+
+        .left {
+          float: left;
+        }
+
+        .right {
+          float: right;
+        }
+      }
+
+      .submit {
+        display: none;
+      }
+    }
+
+    #loginHostPort {
+      display: none; // Easter egged as of the moment
+    }
+
+    .login-footer-message {
+      font-size: 18px;
+      color: @dark_8;
+      text-align: center;
+      text-transform: capitalize;
+      padding-top: 15px;
+    }
+  }
+
+  // Autocomplete widget for AD domain dropdown at login.animation.
+  ~ .ui-menu {
+    background-color: @dark_9;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    overflow: visible;
+    border: 0;
+    padding: 0;
+
+    &::before {
+      content: '';
+      height: 6px;
+      width: 485px;
+      background: @dark_9;
+      position: absolute;
+      top: -6px;
+      left: 0;
+    }
+
+    .ui-menu-item {
+      a {
+        text-decoration: none;
+        display: block;
+        padding: 20px;
+        line-height: normal;
+        font-size: 24px;
+        color: @dark_4;
+        height: 29px;
+        transition: none;
+
+        &.ui-state-hover {
+          background-color: @dark_8 !important;
+          margin: 0;
+          color: @dark_2;
+        }
+
+        &.ui-corner-all {
+          border-radius: 0;
+          border: none !important;
+        }
+      }
+
+      &:last-child a.ui-state-hover {
+        border-bottom-left-radius: 4px;
+        border-bottom-right-radius: 4px;
+      }
+    }
+  }
+
+  > .bottom-left {
+    opacity: 0;
+    position: fixed;
+    bottom: 18px;
+    left: 25px;
+
+    > .powered-by {
+      position: relative;
+      font-size: 13px;
+      margin-right: 9px;
+      font-weight: normal;
+      color: @white_1;
+    }
+
+    .rebrand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      span {
+        &:first-child {
+          //.lenovo-logo(90px, 32px, @lenovo_dark_1);
+
+          padding-right: 20px;
+          border-right: 1px solid @lenovo_dark_2;
+        }
+
+        &:nth-child(2) {
+          //.hx-logo(36px, 16px, @white_1, @lenovo_dark_5);
+
+          padding-left: 20px;
+          padding-right: 9px;
+        }
+
+        &:last-child {
+          color: @white_1;
+          font-weight: @fontWeightMedium;
+          font-size: 17px;
+        }
+      }
+    }
+
+    > .svg-loader {
+      //.donut-loader-color(@inner: @black_1);
+    }
+
+    // Nutanix login logo
+    > .nutanix-logo {
+      fill: @white_1;
+      display: inline-block;
+      vertical-align: middle;
+      width: 90px;
+      height: 11px;
+      position: relative;
+      bottom: 2px;
+    }
+
+    // Nutanix multicluster mode indicator
+    > .multicluster-mode {
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: 15px;
+      text-transform: uppercase;
+      font-size: 12px;
+      font-weight: @fontWeightSemiBold;
+      letter-spacing: 1px;
+      color: @white_1;
+      opacity: 0.6;
+    }
+  }
+
+  > .bottom-right {
+    opacity: 0;
+  }
+
+  // Disable/Enable Connection Video Link
+  #disableVideoSection {
+    .videoControlLink {
+      position: fixed;
+      right: 25px;
+      bottom: 19px;
+      font-size: 13px;
+      font-weight: normal;
+      color: @white_1;
+      opacity: 0.5;
+      z-index: @video-control-link-z-index;
+      display: none;
+
+      &:hover {
+        opacity: 1;
+        cursor: pointer;
+      }
+    }
+
+    #disableVideoLink {
+      display: block;
+    }
+  }
+}
+
+@keyframes slidein {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slidein_2 {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+
+  60% {
+    opacity: 0;
+    transform: scale(0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+// Welcome Banner Styles
+// ---------------------
+#loginWelcomeBanner {
+  text-align: center;
+  width: 520px;
+  height: 400px;
+  background-color: @white_1;
+  border: 1px solid @white_1;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+
+  .antiscroll-wrap {
+    .antiscroll-inner {
+      height: 400px;
+    }
+  }
+
+  #welcomeBannerContainer {
+    opacity: 0;
+    transition: opacity 2s;
+    padding-top: 30px;
+    box-sizing: border-box;
+
+    // Use welcome banner common styles
+    //.n-welcome-banner;
+  }
+}
+
+#btnAccept {
+  cursor: pointer;
+  margin-top: 0;
+  padding: 5px 0;
+  width: 100%;
+  text-align: center;
+  color: @white_1;
+  font-size: 15px;
+  font-weight: @fontWeightSemiBold;
+  line-height: 35px;
+  background-color: @green_2;
+  border: 1px solid @green_2;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+
+  &:hover,
+  &:focus {
+    background-color: @green_1;
+  }
+
+  .n-msg {
+    padding: 0 35px;
+    float: left;
+    margin: 0;
+  }
+
+  .n-check {
+    padding: 0 35px;
+    float: right;
+    font-size: 15px;
+    font-weight: @fontWeightRegular;
+  }
+}
+
+// PULSE
+.n-pulse-info-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -200px;
+  margin-left: -250px;
+  text-align: left;
+  max-height: 410px;
+  max-width: 500px;
+  overflow: hidden;
+  font-weight: @fontWeightMedium;
+  font-size: 14px;
+  color: @white_1;
+
+  .n-pulse-header {
+    font-weight: @fontWeightSemiBold;
+    font-size: 30px;
+    color: @white_1;
+    text-align: center;
+  }
+
+  .n-message-header {
+    height: 25px;
+
+    .n-error-message {
+      color: @red_2;
+      font-size: 11px;
+    }
+  }
+
+  .n-pulse-content {
+    max-height: 400px;
+    overflow: hidden;
+    position: relative;
+
+    .n-pulse-warning {
+      color: @red_3;
+    }
+  }
+
+  .n-pulse-input-container {
+    padding-top: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .n-checkbox-container {
+      font-size: 12px;
+    }
+
+    .n-button-container {
+      .btn {
+        min-width: 150px;
+        font-size: 14px;
+      }
+    }
+  }
+
+  .n-pulse-disclaimer {
+    color: @dark_6;
+    padding-top: 40px;
+    font-size: 10px;
+  }
+}
+
+// EULA
+.n-eula-agreement-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -250px;
+  margin-left: -500px;
+  text-align: center;
+  max-height: 500px;
+  max-width: 1000px;
+
+  // Input styling similar to Login
+  input[type="text"] {
+    background: fade(@white_1, 10%);
+    border-radius: 6px;
+    border: none;
+    font-size: 17px;
+    outline: none;
+    width: 100%;
+    padding: 18px;
+    transition: all 0.4s;
+    box-sizing: border-box;
+    box-shadow: none;
+    display: inline-block;
+    height: auto;
+    margin: 0;
+    vertical-align: baseline;
+    font-family: @baseFont;
+    font-weight: @fontWeightMedium;
+    line-height: normal;
+    color: fade(@white_1, 80%);
+
+    &::placeholder {
+      color: fade(@white_1, 30%);
+    }
+
+    &:focus,
+    &.focus {
+      background: fade(@white_1, 90%);
+      color: fade(@black_1, 100%);
+
+      &::placeholder {
+        color: fade(@black_1, 30%);
+      }
+    }
+  }
+  // End input styling
+
+  .n-eula-header {
+    font-weight: @fontWeightSemiBold;
+    font-size: 30px;
+    color: @white_1;
+    padding-bottom: 64px;
+  }
+
+  .n-eula-container {
+    .n-eula-agreement {
+      font-weight: @fontWeightMedium;
+      font-size: 12px;
+      color: @dark_7;
+      display: inline-block;
+      max-height: 375px;
+      box-sizing: border-box;
+      overflow: hidden;
+      text-align: left;
+      vertical-align: top;
+      padding-right: 20px;
+      max-width: 500px;
+      position: relative;
+      top: 25px;
+
+      // Styling for EULA sub-bullets
+      ol {
+        counter-reset: item;
+
+        li {
+          display: block;
+
+          &::before {
+            content: counters(item, ".") ". ";
+            counter-increment: item;
+          }
+        }
+      }
+
+      ol {
+        li {
+          ol {
+            li::before {
+              content: counters(item, ".") " ";
+              counter-increment: item;
+            }
+          }
+        }
+      }
+
+      // Use alphabets for bullets with ')'
+      ol {
+        li {
+          ol {
+            li {
+              ol {
+                li::before {
+                  counter-increment: item;
+                  content: " (" counter(item, lower-alpha) ") ";
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .antiscroll-scrollbar-vertical {
+        background-color: @dark_4;
+        right: 0;
+        z-index: 1;
+        width: 4px;
+      }
+    }
+
+    .n-eula-input-container {
+      display: inline-block;
+      box-sizing: border-box;
+      max-height: 400px;
+      vertical-align: top;
+      padding-left: 90px;
+      padding-right: 50px;
+      max-width: 500px;
+
+      .n-message-header {
+        height: 25px;
+
+        .n-error-message {
+          color: @red_2;
+          font-size: 11px;
+        }
+      }
+
+      .n-error {
+        box-shadow: 0 0 0 1px @red_2 !important;
+        z-index: 10;
+        bottom: 1px !important;
+      }
+
+      .n-row + .n-row {
+        margin: 20px 0;
+      }
+
+      .n-row {
+        &.n-btn-container {
+          margin: 0;
+          text-align: left;
+
+          .n-button + .n-button {
+            margin-left: 18px;
+          }
+        }
+
+        &.n-terms-conditions-container {
+          padding: 16px 0;
+          text-align: left;
+        }
+
+        .n-checkbox {
+          & + label {
+            background-color: transparent !important;
+            line-height: 20px;
+            vertical-align: middle;
+          }
+
+          &:checked + label {
+            background-color: @blue_2 !important;
+            border-color: @blue_2 !important;
+
+            &::after {
+              color: @white_1 !important;
+            }
+          }
+        }
+
+        .n-button {
+          color: @white_1;
+          font-weight: @fontWeightSemiBold;
+          font-size: 16px;
+          background-color: transparent;
+          line-height: 36px;
+          border-color: @dark_4;
+          width: 150px;
+          box-sizing: border-box;
+          height: 40px;
+
+          &.n-accept {
+            float: right;
+          }
+
+          &.n-decline {
+            float: left;
+
+            &:hover,
+            &:focus {
+              border-color: @white_1;
+            }
+          }
+
+          &.n-blue {
+            //.blueButtonFlat();
+
+            &:hover,
+            &:focus {
+              //.blueButtonFlatHover();
+            }
+          }
+        }
+
+        .n-terms-conditions-label {
+          font-weight: @fontWeightMedium;
+          font-size: 13px;
+          color: @dark_7;
+          display: inline-block;
+          margin: 0;
+          line-height: 20px;
+          vertical-align: middle;
+          padding-left: 10px;
+        }
+      }
+    }
+  }
+}

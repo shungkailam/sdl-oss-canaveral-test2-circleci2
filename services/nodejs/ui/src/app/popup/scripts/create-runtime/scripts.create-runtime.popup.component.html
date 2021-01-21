@@ -1,0 +1,193 @@
+<div class="create-runtime-container">
+    <div class="item-a">
+        <div class="popup-title">{{isUpdate ? 'Update runtime': 'Create runtime'}}</div>
+        <div (click)="onClosePopup()" class="icon-star close-div">
+        <i class="fulldetail-close-button" title="Back">
+            <svg viewBox="0 792 2048 2048" class="svg-icon  -id-K">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#K"></use>
+            </svg>
+        </i>
+        </div>
+        <nz-alert  *ngIf ="builtin" [nzType]="'warning'" [nzCloseable]="true" (nzOnClose)="onCloseAlert()" nzShowIcon>
+            <span  alert-body>
+                <pre>System Runtime Environment is Read-only.</pre>
+            </span>
+        </nz-alert>
+        <nz-alert  *ngIf ="globalRuntime && _sherlockRole===''" [nzType]="'warning'" [nzCloseable]="true" (nzOnClose)="onCloseAlert()" nzShowIcon>
+            <span  alert-body>
+                <pre>Global Runtime Environment is Read-only for Project Users.</pre>
+            </span>
+      </nz-alert> 
+    </div>
+    <div *ngIf="!isLoading" class="item-b">
+        <div class="content">
+            <div class="content-title">General Information</div>
+            <div style="position: relative;">
+                <div class="top-layer" *ngIf="builtin"></div>
+                <div class="input-group">
+                    <div class="content-subtitle">Name</div>
+                    <input [disabled] = "builtin || (globalRuntime && _sherlockRole === '')" type="text" [(ngModel)]="name" (ngModelChange)="checkRuntimeNameDuplicate(name)" placeholder="Please Enter" maxlength=200 [ngClass]="{'error-border': runtimeNameFound}">
+                    <div *ngIf="runtimeNameFound" class='error-style'>
+                        Name already exists. Please enter a new name.
+                    </div>
+                </div>
+                <div class="input-group">
+                    <div class="content-subtitle">
+                        Description
+                    </div>
+                    <textarea [disabled] = "builtin|| (globalRuntime && _sherlockRole === '')" style="height:95px; padding: 5px 10px; margin-top: 5px;" maxlength=200 [(ngModel)]="desp" placeholder="Describe the Purpose"></textarea>
+                </div>
+                <div *ngIf ="this.userCreatedRuntime" class="input-group">
+                    <div class="content-subtitle">
+                        Project
+                    </div>
+                    <nz-select [nzDisabled] = "context === 'project' || this.isUpdate" style="width: 700px;" [nzPlaceHolder]="'Select...'" [(ngModel)]="projectId" (ngModelChange)="filterDockerProfiles()">
+                        <nz-option *ngIf="_sherlockRole !== ''" [nzValue]="'global'"  [nzLabel]="'Global Runtime'"></nz-option>
+                        <nz-option *ngFor="let p of projectsData" [nzValue]="p.id"  [nzLabel]="p.name"></nz-option>
+                    </nz-select>
+                </div>
+                <div *ngIf ="!builtin && (globalRuntime || projectId)" class="input-group">
+                    <div class="content-subtitle">Container Registry</div>
+                    <div *ngIf="containerRegistry.length > 0">
+                        <nz-select [nzDisabled]= "globalRuntime && _sherlockRole ===''" style="width: 700px;" [nzPlaceHolder]="'Select...'" [(ngModel)]="selectedContainer">
+                            <nz-option *ngFor="let cont of containerRegistry" [nzValue]="cont.id"  [nzLabel]="cont.name"></nz-option>
+                        </nz-select>
+                    </div>
+                    <div *ngIf="containerRegistry.length === 0" class="center-container">
+                        <div class="center-item">
+                            <div>No container Registry Profile added.</div>
+                            <div style="margin-top: 20px">
+                            <button   *ngIf ="_sherlockRole !==''" nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="onClickAddProfile()">
+                                <i class="anticon anticon-plus"></i>
+                                <span>Add Profile</span>
+                            </button>
+                            </div>
+                        </div>
+                        <nz-modal [nzVisible]="showAddContainer" [nzTitle]="'Add Container Registry Profile'" (nzOnCancel)="onUploadContainer(false)"
+                        (nzOnOk)="onUploadContainer(true)" [nzContent]="modalContent" [nzFooter]="edgeFooter">
+                            <ng-template #modalContent>
+                               <app-components-create-container-popup (valueChange)='cloudContentChange($event)'></app-components-create-container-popup>
+                            </ng-template>
+                            <ng-template #edgeFooter>
+                                <button nz-button (click)="onUploadContainer(false)">
+                                    <span>Cancel</span>
+                                </button>
+                                <button nz-button [nzType]="'primary'" (click)="onUploadContainer(true)" [disabled]="containerCreationDisabled">
+                                    <span>Done</span>
+                                </button>
+                            </ng-template>
+                        </nz-modal>   
+                    </div> 
+                </div>
+                <div *ngIf ="projectId || builtin || globalRuntime"  class="input-group">
+                    <div class="content-subtitle">Container Image Path</div>
+                    <input [disabled] = "builtin || (globalRuntime && _sherlockRole === '')" type="text" [(ngModel)]="imagePath" placeholder="Please Enter" maxlength=200>
+                </div>
+                <div *ngIf ="projectId || builtin || globalRuntime" class="input-group">
+                    <div class="content-subtitle">Languages</div>
+                    <nz-select [nzDisabled] = "builtin|| (globalRuntime && _sherlockRole === '')" style="width: 700px;" [nzPlaceHolder]="'Select...'" [(ngModel)]="language">
+                        <nz-option *ngFor="let lang of languages" [nzValue]="lang"  [nzLabel]="lang"></nz-option>
+                    </nz-select>
+                </div>
+            </div>
+            <div *ngIf ="projectId || builtin || globalRuntime" class="content-title" style="margin-top: 15px;">Docker File (Optional)</div>
+            <div *ngIf ="projectId || builtin || globalRuntime" style="margin-top: 10px;">The Docker File serves as the Documentation for the container Image.</div>
+            <div *ngIf ="projectId || builtin || globalRuntime" class="center-container editor-modal">
+                <div class="center-item" *ngIf="dockerfile.length === 0">
+                    <div>No Docker File has been added.</div>
+                    <div style="margin-top: 20px">
+                    <button nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="onClickAddDockerProfile(false)">
+                        <i class="anticon anticon-plus"></i>
+                        <span>Add Docker Profile</span>
+                    </button>
+                    </div>
+                </div>
+                <div class="dockerItem" *ngIf="dockerfile.length > 0">
+                    <span style="font-weight: 600;">
+                        Uploaded Docker File
+                    </span>
+                    <div style="float:right" *ngIf="!builtin && _sherlockRole !==''">
+                        <a (click)="onClickAddDockerProfile(true)">
+                            Edit
+                        </a>
+                        <a (click)="onClickDeleteDockerProfile()" style="color:#9c0909; margin-left: 10px;">
+                            Remove
+                        </a>
+                    </div>
+                    <div style="float:right" *ngIf="builtin || (globalRuntime && _sherlockRole === '')">
+                        <a (click)="onClickAddDockerProfile(true)">
+                            View
+                        </a>
+                    </div>
+                </div>
+                <nz-modal [nzVisible]="showAddDockerFile" [nzTitle]="'Add Docker Profile'" (nzOnCancel)="onUploadDockerFile()"
+                (nzOnOk)="onUploadDockerFile()" [nzContent]="modalContent2" [nzFooter]="dockerFileFooter">
+                    <ng-template #modalContent2>      
+                        <div class="editorWidth">
+                            <div style="display: flex;">
+                                <div style="margin: 5px 0; width: 100%; display: flex;">
+                                    <div>
+                                        <input style="display: block" type="file" name="scriptfile" size="80" (change)="handleFileSelect($event)" [disabled]="showDiff || builtin">
+                                        <div *ngIf="dockerfile.length === 0" class="error-style">
+                                            Please upload a dockerfile.
+                                        </div>
+                                        <div *ngIf="dockerfile.length > 4096" class="error-style">
+                                            File size too large. Please limit character number to 4096.
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="spacer"></div>
+                                    <div class="theme-select">
+                                        <select [(ngModel)]="theme" (ngModelChange)="onChangeTheme()" class="theme-selector">
+                                            <option *ngFor="let thm of themes" value="{{thm.value}}" [selected]="theme === thm.value">{{thm.name}}</option>
+                                        </select>
+                                    </div>
+                                    <button nz-button (click)="displayDiffEditor()">
+                                        <span>{{showDiff ? 'Show Editor' : 'Show Diff'}}</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div style="margin-top: 20px;width:100%;height:600px;" *ngIf="showMonacoEditor">
+                                <monaco-editor [readOnly]="builtin" *ngIf="!showDiff" #monacoEditor [(ngModel)]="dockerfile"></monaco-editor>
+                                <monaco-editor [readOnly]="builtin" *ngIf="showDiff" #monacoDiffEditor [(ngModel)]="diffObj" [showDiff]="true" language="dockerfile" [editorHeight]=400></monaco-editor>
+                            </div>
+                        </div> 
+                    </ng-template>
+                    <ng-template #dockerFileFooter>
+                        <button nz-button (click)="onUploadDockerFile()">
+                            <span>Cancel</span>
+                        </button>
+                        <button nz-button [nzType]="'primary'" (click)="onUploadDockerFile()" [disabled]="dockerfile.length === 0 || dockerfile.length > 4000" [nzLoading]="isConfirmLoading">
+                            <span>Done</span>
+                        </button>
+                    </ng-template>
+                </nz-modal>     
+            </div>
+        </div>
+    </div>
+    <div *ngIf="isLoading" class="loading-container">
+        <nz-spin></nz-spin>
+    </div>
+    <div class="popup-bottom-content item-c">
+        <div class="popup-footer">
+            <button nz-button (click)="onClosePopup()">
+                <span>Cancel</span>
+            </button>
+            <button *ngIf= "builtin || (globalRuntime && _sherlockRole === '')" nz-button (click)="onClosePopup()" [nzType]="'primary'">
+                <span>Done</span>
+            </button>
+            <button *ngIf= "userCreatedRuntime || (globalRuntime && _sherlockRole !== '')" nz-button [nzType]="'primary'" style="margin-left: 5px;" (click)="onCreateRuntime()" [disabled]="disableRuntimeCreation()" [nzLoading]="isCreateConfirmLoading">
+                <span>{{isUpdate ? 'Update': 'Create'}}</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<nz-modal [nzVisible]="deleteDockerModalVisible" [nzTitle]="'Delete Docker File'" [nzContent]="modalContent1"
+  (nzOnOk)="OnConfirmDeleteDockerFile(true)" [nzOkText]="'Ok'" (nzOnCancel)="OnConfirmDeleteDockerFile(false)" [nzCancelText]="'Cancel'">
+    <ng-template #modalContent1>
+        <div class="content">
+            Are you sure you want to delete the dockerfile(s)?
+        </div>
+    </ng-template>
+</nz-modal>

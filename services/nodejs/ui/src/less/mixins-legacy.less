@@ -1,0 +1,366 @@
+// Copyright (c) 2015 Nutanix Inc. All rights reserved.
+
+// Snippets of reusable CSS to develop faster and keep code readable
+
+// TODO: Replace references to these with LESS Hat references where possible
+
+// Clearfix for clearing floats like a boss h5bp.com/q
+.mx-clearfix() {
+  zoom: 1;
+
+  &::before,
+  &::after {
+    display: table;
+    content: "";
+    zoom: 1;
+  }
+
+  &::after {
+    clear: both;
+  }
+}
+
+.clearfix() {
+  .mx-clearfix;
+}
+
+// Input placeholder text
+.mx-placeholder(@color: @grayLight) {
+  &::placeholder {
+    color: @color;
+  }
+}
+
+.mx-box-sizing(@type: border-box) {
+  box-sizing: @type;
+}
+
+.mx-position(@position: absolute, @top: 0, @right: 0, @bottom: 0, @left: 0) {
+  position: @position;
+  top: @top;
+  right: @right;
+  bottom: @bottom;
+  left: @left;
+}
+
+.mx-box-shadow-border(@thickness: 1px, @color: @semi-white) {
+  // box shadow: top, bottom, left, right
+  box-shadow:
+    inset 0 @thickness 0 0 @color,
+    inset 0 -@thickness 0 0 @color,
+    inset @thickness 0 0 0 @color,
+    inset -@thickness 0 0 0 @color;
+}
+
+.mx-box-shadow-border-minus-left(@thickness: 1px, @color: @semi-white) {
+  // box shadow: top, bottom, right
+  box-shadow:
+    inset 0 @thickness 0 0 @color,
+    inset 0 -@thickness 0 0 @color,
+    inset -@thickness 0 0 0 @color;
+}
+
+.mx-gradient(@startColor: @dark_9, @endColor: @white_1, @start_y: 0%, @end_y: 100%) {
+  background-image: linear-gradient(to bottom, @startColor @start_y, @endColor @end_y);
+}
+
+.mx-animation(@name, @duration: 300ms, @ease: ease, @iteration: 1) {
+  animation: @name @duration @ease @iteration;
+}
+
+.mx-animation-name(@name) {
+  animation-name: @name;
+}
+
+.mx-animation-duration(@duration) {
+  animation-duration: @duration;
+}
+
+.mx-animation-timing-function(@timing) {
+  animation-timing-function: @timing;
+}
+
+.mx-animation-delay(@delay) {
+  animation-delay: @delay;
+}
+
+.mx-transition(@transition) {
+  transition: @transition;
+}
+
+// TODO remove it
+.mx-transition-prefixed(@transition) {
+  transition: ~"@{transition}";
+}
+
+.mx-transition-property(@property) {
+  transition-property: @property;
+}
+
+.mx-transition-duration(@duration) {
+  transition-duration: @duration;
+}
+
+.mx-transition-timing-function(@timing) {
+  transition-timing-function: @timing;
+}
+
+.mx-transition-delay(@delay) {
+  transition-delay: @delay;
+}
+
+.mx-transform(@string) {
+  transform: @string;
+}
+
+.mx-scale(@factor) {
+  transform: scale(@factor);
+}
+
+.mx-rotate(@deg) {
+  transform: rotate(@deg);
+}
+
+.mx-skew(@deg, @deg2) {
+  transform: skew(@deg, @deg2);
+}
+
+.mx-translate(@x, @y:0) {
+  transform: translate(@x, @y);
+}
+
+.mx-translate3d(@x, @y: 0, @z: 0) {
+  transform: translate3d(@x, @y, @z);
+}
+
+.mx-perspective(@value: 1000) {
+  perspective: @value;
+}
+
+.mx-transform-origin(@x:center, @y:center) {
+  transform-origin: @x @y;
+}
+
+// stylelint-disable property-no-unknown
+
+.mx-font-smoothing(@smoothing) when (@smoothing = antialiased) {
+  font-smoothing: @smoothing;
+}
+
+.mx-font-smoothing(@smoothing: none) {
+  font-smoothing: @smoothing;
+}
+
+// stylelint-enable
+
+.mx-border-radius(@radius) {
+  border-radius: @radius;
+}
+
+// Border radius for tables
+// -------------------------
+// This mixin will add border radius and will fix broken borders on tables.
+// If table starts with thead then add @thead: true.
+// Example: .mx-table-border-radius(4px, @thead: true);
+.mx-table-border-radius(@radius: 4px, @thead: false) {
+  // For thead based table
+  .mx-table(@radius, @thead) when (@thead = true) {
+    border-radius: @radius;
+
+    thead tr:first-child {
+      th:first-child {
+        border-top-left-radius: @radius;
+      }
+
+      th:last-child {
+        border-top-right-radius: @radius;
+      }
+    }
+
+    tr:last-child {
+      td:first-child {
+        border-bottom-left-radius: @radius;
+      }
+
+      td:last-child {
+        border-bottom-right-radius: @radius;
+      }
+    }
+  }
+
+  // For non thead based table
+  .mx-table(@radius, @thead) when (@thead = false) {
+    border-radius: @radius;
+
+    tr:first-child {
+      td:first-child {
+        border-radius: @radius 0 0 0;
+      }
+
+      td:last-child {
+        border-radius: 0 @radius 0 0;
+      }
+    }
+
+    tr:last-child {
+      td:first-child {
+        border-radius: 0 0 0 @radius;
+      }
+
+      td:last-child {
+        border-radius: 0 0 @radius 0;
+      }
+    }
+  }
+
+  .mx-table(@radius, @thead);
+}
+
+// Set the select mode
+.mx-user-select(@selectMode) {
+  user-select: @selectMode;
+}
+
+.mx-box-shadow(@boxShadow) {
+  box-shadow: @boxShadow;
+}
+
+.mx-animation-iteration-count(@count) {
+  animation-iteration-count: @count;
+}
+
+// Reset filters for IE
+.mx-reset-filter() {
+  filter: e(%("progid:DXImageTransform.Microsoft.gradient(enabled = false)"));
+}
+
+// Opacity
+.mx-opacity(@opacity: 100) {
+  opacity: @opacity / 100;
+}
+
+// Caret
+.mx-caret(
+  @borderWidth: 3px,
+  @color: transparent transparent @white_1 transparent,
+  @direction: 'default'
+) {
+  content: ' ';
+  height: 0;
+  width: 0;
+  border-style: solid;
+  border-width: @borderWidth;
+  border-color: @color;
+
+  .caret(@direction) when (@direction = 'up') {
+    border-color: transparent transparent @color transparent;
+  }
+
+  .caret(@direction) when (@direction = 'down') {
+    border-color: @color transparent transparent transparent;
+  }
+
+  .caret(@direction) when (@direction = 'left') {
+    border-color: transparent @color transparent transparent;
+  }
+
+  .caret(@direction) when (@direction = 'right') {
+    border-color: transparent transparent transparent @color;
+  }
+
+  .caret(@direction) { // default (no direction passed)
+  }
+
+  .caret(@direction);
+}
+
+// Text Ellipsis
+.mx-text-ellipsis() {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// Mixin for popups
+.mx-popup(@width: 280px, @inputWidths: 227px) {
+  width: @width;
+
+  input {
+    width: @inputWidths;
+  }
+
+  label {
+    display: block;
+    width: 240px;
+    margin-left: 20px;
+    text-align: left;
+    padding-top: 0;
+  }
+
+  .controls {
+    margin-left: 20px;
+  }
+}
+// Enable action menu
+.mx-action-enabled() {
+  // Related to .n-action-enabled from main.less
+  // This class is added to an element when action menu is enabled
+  &.n-action-enabled {
+    // Hover style on element that has an action menu
+    &:hover {
+      border-color: @blue_2;
+    }
+  }
+}
+
+// Fade in Popup
+@keyframes mx-popup-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 30%, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+// Fade in Page Popup
+@keyframes mx-page-popup-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 15%, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+// Fade out Page Popup
+@keyframes mx-page-popup-out {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translate3d(0, 15%, 0);
+  }
+}
+
+// Fade out second Popup (when multiple popups)
+@keyframes mx-popup-second-out {
+  from {
+    opacity: 1;
+    transform: translate3d(0, -50%, 0);
+  }
+
+  to {
+    opacity: 0;
+    transform: translate3d(0, -20%, 0);
+  }
+}

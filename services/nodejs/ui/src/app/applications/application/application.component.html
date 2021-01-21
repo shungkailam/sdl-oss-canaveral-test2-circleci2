@@ -1,0 +1,24 @@
+<div class="main-sidebar-wrapper nano" style="height: calc(100% - 60px);">
+    <div class="main-sidebar nano-content" tabindex="0">
+      <div class="summary">
+        <h1>{{appName}}</h1>
+      </div>
+      <div class="meta">
+          <div class="meta-item">
+            <p class="info">{{logsEntity ? logData.length  : edgeCount }} {{logsEntity ? 'Total Log Bundles' : 'Total Deployments'}}</p>
+          </div>
+        </div>
+      <div class="sidebar-group">
+        <div class="sidebar-item" routerLink="./summary" routerLinkActive="selected" queryParamsHandling="true">Summary</div>
+        <div class="sidebar-item" routerLink="./deployment" routerLinkActive="selected" queryParamsHandling="true">Deployment</div>
+        <div class="sidebar-item" routerLink="./alerts" routerLinkActive="selected" queryParamsHandling="true">Alerts</div>
+        <div class="sidebar-item" routerLink="./logs" routerLinkActive="selected" queryParamsHandling="true">Log Bundles</div>
+      </div>
+    </div>
+    <div class="nano-pane" style="display: none; opacity: 1; visibility: visible;">
+      <div class="nano-slider" style="height: 589px; transform: translate(0px, 0px);"></div>
+    </div>
+  </div>
+  <div class="main-sidebar-spacer"></div>
+  
+  <router-outlet></router-outlet>

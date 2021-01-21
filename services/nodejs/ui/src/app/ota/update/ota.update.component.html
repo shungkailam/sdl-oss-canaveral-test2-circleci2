@@ -1,0 +1,75 @@
+<div style="padding: 20px; width: calc(100vw - 240px)">
+    <div *ngIf="(edgeUpdateVersion === '' || updates.length === 0) && !isLoading" class="center-container">
+        <div class="center-item">
+            <div>No Updates Available</div>
+        </div>
+    </div>
+    <div *ngIf="isLoading" class="center-container">
+        <nz-spin></nz-spin>
+    </div>
+    <div *ngIf="edgeUpdateVersion !== '' && updates.length > 0 && !isLoading">
+        <div class="toolbar" style="padding-bottom:0px;">
+            <button nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="onClickUpdate()">
+                <span>{{updateNone ? 'Update All' : 'Update Selected'}}</span>
+            </button>
+        </div>
+        <div style="margin: 10px 0 -10px 0;">
+            1 Update Available (1 Selected)
+        </div>
+        <div nz-row >
+            <div nz-col class="update-card" [nzSpan]="11" *ngFor="let update of updates" [ngClass]="update.selected ? 'card-border' : ''">
+                <div class="card-row">
+                    <label nz-checkbox [(ngModel)]="update.selected" (ngModelChange)="changeUpdateSelection()">
+                        <span style="color: rgba(0, 0, 0, 0.85)">{{update.name}}</span>
+                    </label>
+                    <div style="float: right">
+                        <span class="update-circle">
+                            {{selectedEdges.length}}
+                        </span>
+                        <span class="update-version">
+                            {{edgeUpdateVersion}}   
+                        </span>
+                    </div>
+                </div> 
+                <div class="card-row">
+                    <span>Selected Entities: </span>
+                    <span class="selectedEntitiesText" [ngClass]="extraText ? '' : 'larger-width'">{{selectedEntitiesText}}</span>
+                    <span>{{extraText}}</span>
+                    <a (click)="editEntities()" style="float:right;">
+                        edit
+                    </a>
+                </div> 
+                <div class="card-row" style="border-bottom:none !important">
+                    Last Updated: 1 days ago
+                </div> 
+            </div>
+        </div>
+    </div>
+</div>
+<nz-modal [nzVisible]="showEdges" [nzTitle]="updateTitle" [nzContent]="modalContent"
+(nzOnOk)="OnClickSelectEdge(true)" [nzOkText]="'Done'" (nzOnCancel)="OnClickSelectEdge(false)" [nzCancelText]="'Cancel'">
+    <ng-template #modalContent>
+        <div style="color: rgba(0, 0, 0, 0.85)">
+            All the selected edges will be updated with the Edge Updates - {{edgeUpdateVersion}}.
+        </div>
+        <div style="margin: 10px 0;">
+            {{selectedEdgeNum}} of {{edges.length}} selected
+        </div>
+        <div class="modal-container">
+            <div class="modal-item">
+                <label nz-checkbox class="modal-item-width" [(ngModel)]="selectAllEdges" (ngModelChange)="selectAllEdge()" style="width: 300px;">
+                    <span style="color: rgba(0, 0, 0, 0.85)">Name</span>
+                </label>
+                <span class="modal-item-width">Installed Version</span>
+            </div>
+            <div class="modal-item-container">
+                <div *ngFor="let edge of edges" class="modal-item">
+                    <label nz-checkbox class="modal-item-width" [(ngModel)]="edge.selected" style="width: 300px;" (ngModelChange)="selectEdge(edge)">
+                        <span style="color: rgba(0, 0, 0, 0.85)">{{edge.name}}</span>
+                    </label>
+                    <span class="modal-item-width">{{edge.edgeVersion}}</span>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</nz-modal>

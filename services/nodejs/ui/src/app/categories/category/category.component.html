@@ -1,0 +1,16 @@
+<div class="main-sidebar-wrapper nano" style="height: calc(100% - 60px);">
+    <div  class="main-sidebar nano-content" tabindex="0">
+      <div *ngIf="category" class="summary">
+        <h1>{{category.name}}</h1>
+      </div>
+      <div class="meta">
+        <div *ngIf="categoryValues.length !== 0" class="meta-item">
+          <p class="info">{{categoryValues.length + ' Values'}}</p>
+        </div>
+      </div>
+    </div>
+    <div class="nano-pane" style="display: none; opacity: 1; visibility: visible;"><div class="nano-slider" style="height: 589px; transform: translate(0px, 0px);"></div></div></div>
+  <div class="main-sidebar-spacer"></div>
+  
+  <router-outlet></router-outlet>
+  

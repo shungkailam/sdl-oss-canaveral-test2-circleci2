@@ -1,0 +1,181 @@
+
+    <div class="right-panel">
+      <div *ngIf="data.length === 0 && isLoading" class="center-container">
+        <nz-spin></nz-spin>
+      </div>
+      <div  *ngIf="data.length === 0 && !isLoading" class="center-container">
+          <div class="center-item">
+              <div>No Logs have been collected yet.</div>
+              <div style="margin-top: 20px">
+                <button nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="onClickCreateLog()">
+                    <i class="anticon anticon-plus"></i>
+                    <span>Run Log Collector</span>
+                </button>
+              </div>
+          </div>
+      </div>
+      <div *ngIf="data.length > 0">
+          <div class="toolbar" style="padding-bottom:0px;">
+            <button nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="onClickCreateLog()">
+              <i class="anticon anticon-plus"></i>
+              <span>Run Log Collector</span>
+            </button>
+            <button *ngIf="isShowingDeleteButton()" style="margin-left:10px;" nz-button [nzType]="'default'" [nzSize]="'large'"
+              (click) = "onClickDeleteTableRow(null)">
+              <i class="anticon anticon-close"></i>
+              <span>Remove</span>
+            </button>
+          </div>
+          <div class="table-container">
+            <nz-table #nzTable [nzDataSource]="data" [nzPageSize]="10" (nzDataChange)="_displayDataChange($event)" [nzCustomNoResult]="true"
+            (nzPageIndexChange)="_refreshStatus()" (nzPageSizeChange)="_refreshStatus()">
+              <thead nz-thead>
+                <tr>
+                  <th nz-th [nzCheckbox]="true">
+                    <label nz-checkbox [(ngModel)]="_allChecked" [nzIndeterminate]="_indeterminate" (ngModelChange)="_checkAll($event)">
+                    </label>
+                  </th>
+                  <th nz-th *ngFor="let col of columns">
+                    <span>{{col}}</span>
+                    <nz-table-sort [(nzValue)]="sortMap[col]" (nzValueChange)="sort(col,$event)"></nz-table-sort>
+                  </th>
+                  <th nz-th>
+                  </th>
+                </tr>
+              </thead>
+              <tbody nz-tbody>
+                <tr nz-tbody-tr *ngFor="let log of nzTable.data">
+                  <td nz-td [nzCheckbox]="true">
+                    <label nz-checkbox [(ngModel)]="log.checked" (ngModelChange)="_refreshStatus($event)">
+                    </label>
+                  </td>
+                  <td nz-td>{{log.name}}</td>
+                  <td nz-td>{{log.time}}</td>
+                  <td nz-td>
+                    <nz-popover [nzPlacement]="'leftTop'" [nzTitle]="Edges" [nzTrigger]="'hover'">
+                      <div nz-td nz-popover>{{log.count === allEdges.length ? 'All ': ''}}{{log.count}} {{log.count > 1 ? 'Edges' : 'Edge'}}</div>
+                      <ng-template #nzTemplate>
+                        <div style="padding: 10px;">
+                          Edges:
+                          <div class="edgeList" *ngFor="let logEdge of log.edges">
+                            <div>{{logEdge.name}}</div>
+                          </div>
+                        </div>  
+                      </ng-template>
+                    </nz-popover>
+                  </td>
+                  <td nz-td class="logCollectingStatus">
+                      <span *ngIf = "log.status === 'Success'" class="log-success">
+                          <img src="assets/check.png" class="log-icon">
+                      </span>
+                      <span *ngIf = "log.status === 'Success'">Success</span>
+                      <span *ngIf = "log.status === 'Failed'">
+                          <img src="assets/error.png" class="log-icon">
+                      </span>
+                      <span *ngIf = "log.status === 'Failed'" class="log-error">Failed</span>
+                    <!--<span *ngIf = "log.status === 'Success'"><nz-alert [nzType]="'success'" [nzMessage]="'Success'" nzShowIcon></nz-alert></span>
+                    <span *ngIf = "log.status === 'Failed'"><nz-alert [nzType]="'error'" [nzMessage]="'Failed'" nzShowIcon></nz-alert></span>-->
+                    <span *ngIf = "log.status === 'Collecting'"><nz-spin [nzSize]="'small'" style="display: inline-block; position: relative; top: 2px;"></nz-spin> Collecting</span>
+                    <span *ngIf = "log.status === 'Partial Failure'" class="log-success">
+                        <img src="assets/alert.png" class="log-icon">
+                    </span>
+                    <span *ngIf = "log.status === 'Partial Failure'">
+                      Partial Failure
+                    </span>
+                  </td>
+                  <td class="action">
+                    <a (click)="OnClickBundleDownload(log)" style="width: 65px; display: inline-block;" [ngClass] = "log.status === 'Collecting' ? 'disableButtons': ''">{{showStatus(log)}}</a>
+                    <a (click)="onClickDeleteTableRow(log)">Delete</a>
+                  </td>
+                </tr>
+              </tbody>
+            </nz-table>
+          </div>
+  
+      </div>
+    </div>
+<nz-modal  [nzVisible]="isCreateLogVisible" [nzTitle]="'Log Collector'" [nzContent]="modalContent" (nzOnCancel)="uploadLogs(false)"
+    (nzOnOk)="uploadLogs(true)" [nzOkText]="'Collect Logs'" [nzCancelText]="'Cancel'" [ngClass]="{'hide-confirm': isDownload}" [nzFooter]="logFooter">
+  <ng-template #modalContent>
+    <div>
+          <div class="content">
+              {{isDownload ? 'Here is a list of connected Logs for selected edges. You can see the details.': 'Here is a list of Connected Edges in your environment. You can download the log bundles for the selected edges.'}}
+            </div>
+          <div *ngIf="!isDownload" style="margin-top: 20px;">
+            <span style="font-weight: 600; margin-right: 20px;">List of Connected Edges</span>
+            <span>{{selectedEdges.length}} of {{connectedEdges.length}} selected</span>
+          </div>
+          <div class="logsel-Container">
+             <div>
+                <label *ngIf="!isDownload" nz-checkbox [nzDisabled] = "connectedEdges.length === 0" [(ngModel)]="selectAllEdges" (ngModelChange)="onSelectAllEdges()" style="margin: 0 0 10px 10px;">
+                  <span>Edges</span>
+                </label>
+                <div *ngIf="isDownload" style="margin: 0 0 10px 10px;">
+                  Edges
+                </div>
+             </div>
+             <div class="logsel-search">
+                <input (keyup)="onFilterChange()" [(ngModel)]="searchVal" placeholder="Type to Filter..."/>
+                <div class="icon-search">
+                  <svg viewBox="0 0 12 12">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-search-alt"></use>
+                  </svg>
+                </div>
+              </div>
+
+              <div *ngIf="!isPopupLoading && (connectedEdges.length !== 0 || (relatedEdges.length !== 0 && isDownload))" class="logitem-container">
+                <div *ngIf="!isDownload">
+                  <div *ngFor="let edge of connectedEdges">
+                      <label nz-checkbox class="logsel-item" [(ngModel)]="edge.selected" (ngModelChange)="onSelectEdge(edge)">
+                        <span>{{edge.name}}</span>
+                      </label>
+                  </div>
+                </div>  
+                <div *ngIf="isDownload" >
+                    <div *ngFor="let edge of relatedEdges"> 
+                      <div *ngIf="!edge.hide" class="logsel-item" style="height: 38px;">
+                          <span class="edge-name-limit">{{edge.name}}</span>
+                          <span style="vertical-align: top">{{edge.status === 'FAILED' ? 'Failed':'Success'}}</span>
+                          <a *ngIf="edge.status === 'FAILED'" style="float: right;">
+                            <nz-popover [nzPlacement]="'rightBottom'" [nzTitle]="'Failed Log Details'" [nzTrigger]="'hover'">
+                              <div nz-td nz-popover>Detail</div>
+                              <ng-template #nzTemplate>
+                                <div style="padding: 16px;">{{edge.errorMessage}}</div>
+                              </ng-template>
+                            </nz-popover>
+                          </a>
+                          <a *ngIf="edge.status === 'SUCCESS'" download class="downloadFiles" [href]="edge.url" style="float: right; cursor: pointer">Download</a>
+                      </div>      
+                    </div>
+                  </div>
+              </div>
+              <div  *ngIf="!isPopupLoading && connectedEdges.length === 0" class="logitem-container-noEdges"><span>No Connected Edges.</span></div>
+              <div  *ngIf="isPopupLoading" class="logitem-container-loading"><span><nz-spin></nz-spin></span></div>    
+          </div>
+    </div>     
+  </ng-template>
+  <ng-template #logFooter>
+          <div *ngIf="isUploading" style="float: right; margin: 3px 0 0 10px;">
+            <nz-spin></nz-spin>
+          </div>
+          <button nz-button (click)="uploadLogs(false)">
+            <span>Cancel</span>
+          </button>
+          <button nz-button [nzType]="'primary'" [disabled]="this.selectedEdges.length === 0 || uploaded" (click)="uploadLogs(true)" [nzLoading]="isModalConfirmLoading">
+            <span>Collect Logs</span>
+          </button>
+  </ng-template>
+</nz-modal>
+<nz-modal [nzVisible]="isDeleteLogVisible" [nzTitle]="'Delete Log Bundle'" [nzContent]="modalContent1"
+(nzOnOk)="OnClickDeleteBundle(true)" [nzOkText]="'Remove'" (nzOnCancel)="OnClickDeleteBundleCancel()" [nzCancelText]="'Cancel'" [nzConfirmLoading]="isModalConfirmLoading">
+  <ng-template #modalContent1>
+      <nz-alert [nzType]="'warning'" [nzCloseable]="true" (nzOnClose)="onCloseAlert()" nzShowIcon>
+          <span alert-body>
+              <pre>Removing Log Bundle(s).</pre>
+            </span>
+      </nz-alert>
+      <div class="content">
+          Are you sure you want to delete the log bundles?
+      </div>
+  </ng-template>
+  </nz-modal>

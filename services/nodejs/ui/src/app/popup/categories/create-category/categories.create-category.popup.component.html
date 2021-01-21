@@ -1,0 +1,115 @@
+<div class="create-category-popup-container"*ngIf="!isLoading">
+  <div class="item-a">
+    <div class="popup-title">{{(categoryId !== null && categoryAction !== 'duplicate') ? 'Edit Category' : 'Create Category'}}</div>
+    <div (click)="onClosePopup()" class="icon-star close-div">
+      <i class="fulldetail-close-button" title="Back">
+        <svg viewBox="0 792 2048 2048" class="svg-icon  -id-K">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#K"></use>
+        </svg>
+      </i>
+    </div>
+    <nz-alert  *ngIf ="viewModal && _sherlockRole !==''" [nzType]="'warning'" [nzCloseable]="true" (nzOnClose)="onCloseAlert()" nzShowIcon>
+      <span  alert-body>
+          <pre class="notification">This Category is associated with Data Sources/Data Streams. Only 'Name','Purpose', and 'Not associated Values' can be edited.</pre>
+      </span>
+    </nz-alert>
+    <nz-alert  *ngIf ="_sherlockRole===''" [nzType]="'warning'" [nzCloseable]="true" (nzOnClose)="onCloseAlert()" nzShowIcon>
+        <span  alert-body>
+            <pre class="notification">Read-only for Projects Users.</pre>
+        </span>
+    </nz-alert>  
+  </div>
+  <div class="item-b">
+    <div class="content">
+      <div class="input-group">
+        <div class="content-subtitle">
+          Name
+        </div>
+        <input [disabled]="_sherlockRole === ''" type="text" [(ngModel)]="categoryName" (ngModelChange)="checkCategoryDuplicates('name')" placeholder="e.g. Department" [ngClass]="{'error-border': hasDuplicateName}">
+        <div *ngIf="hasDuplicateName" class='error-style'>
+            Category Name already exists. Please enter a new Category Name.
+        </div>
+      </div>
+
+      <div class="input-group">
+        <div class="content-subtitle">Purpose</div>
+        <input [disabled]="_sherlockRole === ''" type="text" [(ngModel)]="categoryPurpose" placeholder="e.g. Departments within my company">
+      </div>
+      <div class="input-group">
+        <div class="values-section">
+          <div class="content-subtitle value-subtitle">Values</div>
+          <div *ngIf="showAddParamTable">
+                <a *ngIf="_sherlockRole !==''" (click)="onAddParam()">
+                  <i class="anticon anticon-plus"></i>
+                  <span>Add Value</span>
+                </a>
+          </div>
+        </div>
+        <div *ngIf="!showAddParamTable" class="center-container">
+          <div class="center-item">
+            <div>No Values Have been added yet.</div>
+            <div style="margin-top: 20px">
+              <button  nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="onClickAddParam()">
+                <i class="anticon anticon-plus"></i>
+                <span>Add Value</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column;" *ngIf="showAddParamTable">
+          <div class="values-name">
+            <input class= "values-name-input" type="text" placeholder="Name" disabled>
+          </div>
+          <nz-table #nzTable [nzDataSource]="categoryValues" [nzIsPagination]="false" *ngIf="categoryValues.length > 0">
+              <tbody nz-tbody>
+                <tr nz-tbody-tr (click)="!data.disabled ? clickRow(data): false" *ngFor="let data of nzTable.data" [ngClass]="(_sherlockRole === ''|| data.disabled ) ? 'disableValues' : ''">
+                  <td class="value-column" style="width: 520px;" nz-td [ngStyle]="{'padding': editRow===data.key ? '0' : '6px 10px'}">
+                    <span *ngIf="editRow!==data.key" [ngStyle]="{'color': data.val ? 'rgba(0, 0, 0, 0.65)' : '#bbbbbb'}">{{data.val || 'Please give a value'}}</span>
+                    <span *ngIf="editRow===data.key && !data.disabled">
+                      <input [disabled]="data.disabled" class="editField" style="width: 100%; height: 32px; border: solid 0px white; margin-top: 0px !important;" [ngClass]="{'error-border': hasDuplicateValue}" [(ngModel)]="tempEditObject[data.key].val"  [disabled]="_sherlockRole === '' || (viewModal && _sherlockRole !=='')" (ngModelChange)="checkCategoryDuplicates('value', tempEditObject[data.key].val)" placeHolder="Please give a value">
+                      <div *ngIf="hasDuplicateValue" class='error-style' style="margin: 5px 0 5px 10px;">
+                          Category Value already exists. Please enter a new Category Value.
+                      </div>
+                    </span>
+                  </td>
+                  <td nz-td  style="width: 70px; padding: 0px;">
+                    <span *ngIf="editRow===data.key && !data.disabled">
+                      <button class="close-button" (click)="cancel($event, data)" nz-button [nzSize]="'small'" [nzShape]="'circle'" [disabled]="_sherlockRole === ''">
+                          <i class="anticon anticon-close"></i>
+                      </button>
+                      <button class="check-button" nz-button [disabled]="!tempEditObject[data.key].val || hasDuplicateValue "
+                        [nzType]="'primary'" [nzSize]="'small'" [nzShape]="'circle'" (click)="save($event, data)">
+                        <i class="anticon anticon-check"></i>
+                      </button>         
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </nz-table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="popup-bottom-content item-c">
+        <div class="popup-footer">
+            <button nz-button
+                    (click)="onClosePopup()">
+              <span>Cancel</span>
+            </button>
+            <button *ngIf="_sherlockRole ===''" nz-button [nzType]="'primary'"
+                    (click)="onClosePopup()">
+              <span>Done</span>
+            </button>
+            <button *ngIf="_sherlockRole !==''" nz-button
+                    [nzLoading]="isConfirmLoading"
+                    [disabled]="isCreateDisabled()"
+                    [nzType]="'primary'"
+                    (click)="onCreateCategory()">
+              <span>{{(categoryId !== null && categoryAction !== 'duplicate') ? 'Update' : 'Create'}}</span>
+            </button>
+        </div>
+  </div>
+</div>
+<div *ngIf="isLoading" class="center-spin">
+  <nz-spin></nz-spin>
+</div>

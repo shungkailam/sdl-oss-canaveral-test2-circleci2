@@ -1,0 +1,24 @@
+<div class="main-sidebar-wrapper nano" style="height: calc(100% - 60px);">
+    <div class="main-sidebar nano-content" tabindex="0">
+      <div class="summary">
+        <h1>Projects</h1>
+      </div>
+      <div class="meta">
+        <div class="meta-item">
+          <p class="info">{{data.length}} Projects</p>
+        </div>
+      </div>
+      <div class="sidebar-group">
+        <div class="sidebar-item" routerLink="./summary" routerLinkActive="selected">Summary</div>
+        <div class="sidebar-item" routerLink="./list" routerLinkActive="selected">Projects List</div>
+        <div class="sidebar-item" routerLink="./alerts" routerLinkActive="selected">Alerts</div>
+        
+      </div>
+    </div>
+    <div class="nano-pane" style="display: none; opacity: 1; visibility: visible;">
+      <div class="nano-slider" style="height: 589px; transform: translate(0px, 0px);"></div>
+    </div>
+  </div>
+  <div class="main-sidebar-spacer"></div>
+  
+  <router-outlet></router-outlet>

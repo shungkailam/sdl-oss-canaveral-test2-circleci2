@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package api;
+
+service DevToolsService {
+    rpc GetEndpoints(GetEndpointsRequest) returns (GetEndpointsResponse) {
+    }
+}
+
+message GetEndpointsRequest {
+    string tenantID = 1;
+    string edgeID = 2;
+    string objectID = 3;
+    string containerID = 4;
+}
+
+message GetEndpointsResponse {
+    string publisherEndpoint = 1;
+    string subscriberEndpoint = 2;
+}

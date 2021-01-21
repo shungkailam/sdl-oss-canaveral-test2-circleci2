@@ -1,0 +1,207 @@
+.create-profile-popup-container {
+    font-size: 14px;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #fff;
+  }
+  
+.popup-title {
+    font-size:20px;
+    padding:15px;
+}
+  
+.item-a {
+    border-bottom: 1px solid #e9e9e9;
+    width: 100%;
+}
+  
+.item-a .close-div {
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+    color: #444444;
+    fill: #444444;
+}
+  
+.item-b {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    overflow: scroll;
+    flex-grow: 1;
+    padding: 0 20px;
+}
+.item-c {
+    border-top: solid 1px #e2dfdf;
+    width: 100%;
+    height: 65px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding:20px;
+}
+  
+.item-b .content {
+    width: 600px;
+    height: 100%;
+    padding: 0 0 30px 0;
+}
+  
+.input-group {
+    margin-top: 15px;
+}
+.input-group input {
+    margin-top: 5px;
+}
+.content-title {
+    font-weight: bold;
+    font-size: 14px;
+  
+}
+.content-subtitle {
+    font-weight: bold;
+    font-size: 12px;
+    color: gray;
+}
+.plus-icon {
+    color: #108ee9;
+    margin-left: 7px;
+}
+.close-icon {
+    color: red;
+    margin-left: 7px;
+}
+.center-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 5px;
+}
+.center-item {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border: 1px solid #dddddd;
+    background-color: #ffffff;
+    border-radius: 4px;
+    padding: 30px;
+}
+.spacer {
+    flex-grow: 2;
+}
+.button-container {
+    display: flex;
+}
+.values-section{
+     display:flex;
+}
+.value-subtitle{
+    flex-grow: 1;
+}
+.values-name-input{
+    background-color: #f1f1f1;
+    border-bottom: 0 !important;
+}
+.value-item{
+    padding:15px !important;
+}
+  
+.close-button, .check-button{
+    width: 18px !important;
+    height: 18px !important;
+}
+  
+.close-button{
+    margin-left:10px; 
+    background-color: #d1d1d1; 
+    color: #ffffff;
+}
+  
+.check-button{
+    margin-top:7px; 
+    margin-left:7px;
+}
+  
+  
+.center-spin{
+    display:flex;
+    height:100vh;
+    width:100vw;
+    justify-content:center;
+    align-items:center;
+}
+  
+.error-style{
+    font-size: 12px;
+    color: #9c0909;
+    margin-top: 5px;
+}
+  
+.error-border{
+    box-shadow: inset 0 0 0 1px #9c0909, inset 0 2px 1px rgba(34,39,46,0.05), 0 0 0 0 rgba(34,165,247,0.15) !important;
+}
+  
+.editField{
+    width: 100%;
+    height: 30px;
+    border: none;
+    padding: 6px 10px;
+}
+  
+.editField:focus{
+    outline: none;
+}
+.info {
+    padding: 35px 10px 10px 0;
+    font-size: 13px;
+}
+
+.options {
+    padding: 20px 15px 20px 0;
+}
+.heading {
+  padding: 25px 0 0 0;
+}
+select {
+  margin-bottom: 30px;
+  height: 34px;
+}
+.awsPlaceHolder::placeholder{
+  font-size:12px;
+}
+.editField::placeholder{
+    font-size:10px;
+}
+input[disabled], select[disabled]{
+    background-color:#f7f7f7;
+}
+.notification {
+    color: #A52A2A;
+    font-size: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.password{
+    position: relative; 
+    top: -25px; 
+    float: right;
+    color: #108ee9;
+}
+input[type="password"] {
+    padding: 6px 50px 6px 10px;
+}
+input[disabled], select[disabled], textarea[disabled] {
+    background-color: #f7f7f7 !important;
+    cursor:  not-allowed;
+  }
+  

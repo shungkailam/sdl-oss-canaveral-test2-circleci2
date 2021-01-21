@@ -1,0 +1,225 @@
+<nz-modal [nzVisible]="isVisible"
+          [nzTitle]="'Create Data Source'"
+          [nzContent]="modalContent"
+          (nzOnCancel)="handleCancel($event)"
+          (nzOnOk)="handleOk($event)"
+          [nzConfirmLoading]="isConfirmLoading"
+          [nzOkText]="okBtnText"
+          [nzCancelText]="cancelBtnText"
+          [nzWidth]="720"
+          [nzFooter]="footerContent"
+>
+  <ng-template #modalContent>
+    <div class="dialog-content">
+      <div class="dialog-left-pane">
+        <nz-steps [(nzCurrent)]="current" [nzDirection]="'vertical'">
+          <nz-step [nzTitle]="'General'"></nz-step>
+          <nz-step [nzTitle]="'Data'"></nz-step>
+          <nz-step [nzTitle]="'Attributes'"></nz-step>
+        </nz-steps>
+      </div>
+      <div class="dialog-right-pane">
+        <div *ngIf="current == 0">
+          <div nz-row>
+            <div nz-col [nzSpan]="6">
+              Name
+            </div>
+            <div nz-col [nzSpan]="18">
+              <input type="text" name="dsname">
+            </div>
+          </div>
+          <div nz-row class="normal-margin-top">
+            <div nz-col [nzSpan]="6">
+              Type
+            </div>
+            <div nz-col [nzSpan]="18">
+              <nz-radio-group [(ngModel)]="sensorType">
+                <label nz-radio [nzValue]="'Sensor'">
+                  <span>Sensor</span>
+                </label>
+                <label nz-radio [nzValue]="'Gateway'">
+                  <span>Gateway</span>
+                </label>
+              </nz-radio-group>
+            </div>
+          </div>
+          <div nz-row class="normal-margin-top">
+            <div nz-col [nzSpan]="6">
+              Identity
+            </div>
+            <div nz-col [nzSpan]="18">
+              <nz-radio-group [(ngModel)]="securityType">
+                <label nz-radio [nzValue]="'Secure'">
+                  <span>Secure (Certificate Based)</span>
+                </label>
+                <label nz-radio [nzValue]="'Unsecure'">
+                  <span>Unsecure (IP Based)</span>
+                </label>
+              </nz-radio-group>
+            </div>
+          </div>
+          <div nz-row class="normal-margin-top">
+            <div nz-col [nzSpan]="6">
+            </div>
+            <div nz-col [nzSpan]="18">
+              <div class="cert-ui">
+                Some Certificate UI
+              </div>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="current == 1">
+          <div>
+            Specify where data from this sensor will be published.
+          </div>
+          <div>
+            <div nz-row class="large-margin-top">
+              <div nz-col [nzSpan]="12">
+                MQTT Topic
+              </div>
+              <div nz-col [nzSpan]="1">
+              </div>
+              <div nz-col [nzSpan]="9">
+                Data Type
+              </div>
+            </div>
+            <div nz-row>
+              <div nz-col [nzSpan]="12">
+                <input type="text">
+              </div>
+              <div nz-col [nzSpan]="1">
+              </div>
+              <div nz-col [nzSpan]="9">
+                <select class="select-box">
+                  <option>Foo</option>
+                </select>
+              </div>
+            </div>
+            <div nz-row class="small-margin-top">
+              <div nz-col [nzSpan]="12">
+                <input type="text">
+              </div>
+              <div nz-col [nzSpan]="1">
+              </div>
+              <div nz-col [nzSpan]="9">
+                <select class="select-box">
+                  <option>Foo</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="small-margin-top">
+            <a>Add...</a>
+          </div>
+        </div>
+        <div *ngIf="current == 2">
+          <div>
+            Specify additional metadata which will be used to identify this source and apply policies.
+          </div>
+          <div>
+            <div nz-row class="large-margin-top">
+              <div nz-col [nzSpan]="7">
+                Category
+              </div>
+              <div nz-col [nzSpan]="1">
+              </div>
+              <div nz-col [nzSpan]="7">
+                Value
+              </div>
+              <div nz-col [nzSpan]="1">
+              </div>
+              <div nz-col [nzSpan]="7">
+                Applied To
+              </div>
+              <div nz-col [nzSpan]="1">
+              </div>
+            </div>
+            <div nz-row class="small-margin-top">
+              <div nz-col [nzSpan]="7">
+                <select class="select-box">
+                  <option>Building</option>
+                </select>
+              </div>
+              <div nz-col [nzSpan]="1">
+              </div>
+              <div nz-col [nzSpan]="7">
+                <select class="select-box">
+                  <option>HQ-1</option>
+                </select>
+              </div>
+              <div nz-col [nzSpan]="1">
+              </div>
+              <div nz-col [nzSpan]="7">
+                <select class="select-box">
+                  <option>All</option>
+                </select>
+              </div>
+              <div nz-col [nzSpan]="1">
+              </div>
+            </div>
+            <div nz-row class="small-margin-top">
+              <div nz-col [nzSpan]="7">
+                <select class="select-box">
+                  <option>Floor</option>
+                </select>
+              </div>
+              <div nz-col [nzSpan]="1">
+              </div>
+              <div nz-col [nzSpan]="7">
+                <select class="select-box">
+                  <option>Floor 1</option>
+                </select>
+              </div>
+              <div nz-col [nzSpan]="1">
+              </div>
+              <div nz-col [nzSpan]="7">
+                <select class="select-box">
+                  <option>All</option>
+                </select>
+              </div>
+              <div nz-col [nzSpan]="1">
+              </div>
+            </div>
+            <div nz-row class="small-margin-top">
+              <div nz-col [nzSpan]="7">
+                <select class="select-box">
+                  <option>Unit</option>
+                </select>
+              </div>
+              <div nz-col [nzSpan]="1">
+              </div>
+              <div nz-col [nzSpan]="7">
+                <select class="select-box">
+                  <option>Celcius</option>
+                </select>
+              </div>
+              <div nz-col [nzSpan]="1">
+              </div>
+              <div nz-col [nzSpan]="7">
+                <select class="select-box">
+                  <option>1 Topic</option>
+                </select>
+              </div>
+              <div nz-col [nzSpan]="1">
+              </div>
+            </div>
+            <div class="small-margin-top">
+              <a>Add...</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #footerContent>
+    <button nz-button *ngIf="current != 0" (click)="handleBack($event)">
+      <span>Back</span>
+    </button>
+    <button nz-button [nzType]="'primary'" [nzLoading]="isConfirmLoading" (click)="handleOk($event)">
+      <span>{{okBtnText}}</span>
+    </button>
+    <button nz-button (click)="handleCancel($event)">
+      <span>Cancel</span>
+    </button>
+  </ng-template>
+</nz-modal>

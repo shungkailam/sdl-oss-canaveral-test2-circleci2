@@ -1,0 +1,137 @@
+
+  <div class="main-sidebar-wrapper nano" style="height: calc(100% - 60px);">
+    <div class="main-sidebar nano-content" tabindex="0">
+      <div class="summary">
+        <h1>Categories</h1>
+      </div>
+      <div class="meta">
+        <div class="meta-item">
+          <p class="info">{{data.length}} Total Categories</p>
+        </div>
+      </div>
+      <div class="sidebar-group">
+        <div>
+          Categories help you logically group your Edge devices, Data sources and many other entities. You can select a category and
+          the policies will be applied to all the entities that are part of it.
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="main-sidebar-spacer"></div>
+  <div class="right-panel">
+    <div *ngIf="data.length !== 0">
+      <div *ngIf= "_sherlockRole !== ''" class="toolbar" style="padding-bottom:0px;">
+        <button style="margin-left:10px;" nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="onClickCreateCategory()">
+          <i class="anticon anticon-plus"></i>
+          <span>Create</span>
+        </button>
+        <button *ngIf="isShowingDeleteButton()" style="margin-left:10px;" nz-button [nzType]="'default'" [nzSize]="'large'" [nzLoading]="isConfirmLoading"
+          (click)="onClickRemoveTableRow()">
+          <i class="anticon anticon-close"></i>
+          <span>Remove</span>
+        </button>
+      </div>
+      <div *ngIf="_sherlockRole !== ''" class="spacer"></div>
+      <div class="table-container">
+        <nz-table #nzTable [nzDataSource]="data" [nzPageSize]="10" (nzDataChange)="_displayDataChange($event)" [nzCustomNoResult]="true"
+          (nzPageIndexChange)="_refreshStatus()" (nzPageSizeChange)="_refreshStatus()">
+          <thead nz-thead>
+            <tr>
+              <th nz-th [nzCheckbox]="true">
+                <label nz-checkbox [(ngModel)]="_allChecked" [nzIndeterminate]="_indeterminate" (ngModelChange)="_checkAll($event)">
+                </label>
+              </th>
+              <th nz-th *ngFor="let col of columns">
+                <span>{{col}}</span>
+                <nz-table-sort [(nzValue)]="sortMap[col]" (nzValueChange)="sort(col,$event)"></nz-table-sort>
+              </th>
+              <th nz-th></th>
+            </tr>
+          </thead>
+          <tbody nz-tbody>
+            <tr nz-tbody-tr *ngFor="let data of nzTable.data; index as i">
+              <td nz-td [nzCheckbox]="true">
+                <label nz-checkbox [(ngModel)]="data.checked" (ngModelChange)="_refreshStatus($event)">
+                </label>
+              </td>
+              <td nz-td><a (click) = "onClickOpenValues(data)">{{data.name}}</a></td>
+              <td nz-td>{{data.values | strArray}}</td>
+              <td nz-td>{{data.associatedEdges}}</td>
+              <td nz-td>{{data.associatedDataSources}}</td>
+              <td nz-td>{{data.associatedDataStreams}}</td>
+              <td nz-td class="categories-table-container-options-column">
+                <nz-popover [nzPlacement]="'leftTop'" [nzTrigger]="'hover'">
+                  <div nz-td nz-popover class="table-container-options"></div>
+                  <ng-template #nzTemplate>
+                    <div class="table-container-options-items">
+                      <nz-radio-group [(ngModel)]="_rowIndex" (ngModelChange)="_refreshStatus($event)" *ngFor="let option of tableRowEditingOptions; index as i">
+                          <p *ngIf= "_sherlockRole === '' && (i === 1 || i === 2)" [ngClass]= "i === 2 ? 'disablebuttons' : ''"  nz-radio-button [nzValue]="data.id" (click)= "i === 2 ? false : option.action($event)">{{option.label}}</p>
+                          <p *ngIf= "_sherlockRole !== '' && i !== 1" [ngClass]= "(data.disable && i === 2) ? 'disablebuttons' : ''"  nz-radio-button [nzValue]="data.id" (click)= "(data.disable && i === 2) ? false : option.action($event)">{{option.label}}</p>
+                      </nz-radio-group>
+                    </div>
+                  </ng-template>
+                </nz-popover>
+              </td>
+            </tr>
+          </tbody>
+          <div noResult>No Data</div>
+        </nz-table>
+      </div>
+    </div>
+    <div *ngIf="data.length === 0 && !isLoading" class="center-container">
+      <div class="center-item">
+        <div *ngIf= "_sherlockRole !== ''">No Categories have been created yet.</div>
+        <div *ngIf= "_sherlockRole === ''">No Categories associated with current user.</div>
+        <div style="margin-top: 20px">
+          <button *ngIf= "_sherlockRole !== ''" nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="onClickCreateCategory()">
+            <i class="anticon anticon-plus"></i>
+            <span>Create Category</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="data.length === 0 && isLoading" class="center-container">
+      <nz-spin></nz-spin>
+    </div>
+  </div>
+  <nz-modal [nzVisible]="isDeleteModalVisible" [nzTitle]="'Remove Category'" [nzContent]="modalContent" [nzFooter]= "viewModal ? null : ''" (nzOnCancel)="handleDeleteCategoryCancel()"
+    (nzOnOk)="handleDeleteCategoryOk()" [nzOkText]="'Remove'" [nzCancelText]="'Cancel'" [nzConfirmLoading]="isModalConfirmLoading">
+    <ng-template #modalContent>
+        <div  *ngIf="isLoading" class="modal-spin">
+            <nz-spin></nz-spin>
+        </div>
+        <div>
+          <nz-alert  *ngIf ="viewModal" [nzType]="'error'" [nzCloseable]="true" (nzOnClose)="onCloseAlert()" nzShowIcon>
+            <span alert-body>
+              <pre>Cannot Remove {{ multipleCategories ? 'Categories.' : 'the Category.' }}</pre>
+            </span>
+          </nz-alert>
+          <nz-alert  *ngIf ="!viewModal" [nzType]="'warning'" [nzCloseable]="true" (nzOnClose)="onCloseAlert()" nzShowIcon>
+            <span alert-body>
+                <pre>Removing {{ multipleCategories ? 'Categories' : 'the Category.' }}</pre>
+              </span>
+          </nz-alert>
+          <div *ngIf ="viewModal" class="associationList">
+              <div  nz-row [ngStyle]="{'margin-top': alertClosed ? '0' : '20px'}">
+                    <span>Removing {{multipleCategories ? "these Categories" : "this Category"}} may have implications over Data Sources/Data Streams.</span>
+              </div>
+              <p><span>Remove the following Categories from selection to continue.</span> </p>
+              <ul class="associatedItems">
+                <li *ngFor ="let c of associatedCategories">{{c.name}}</li>
+              </ul>
+              <ul class="itemsCount">
+                  <li>Associated Data Streams : {{_dataStreamsCount}}</li>
+                  <li>Associated Data Sources : {{_dataSourcesCount}}</li>
+              </ul>
+             
+          </div>
+          <div *ngIf ="!viewModal" nz-row [ngStyle]="{'margin-top': alertClosed ? '0' : '20px'}">
+              Are you sure you want to remove {{multipleCategories ? "these Categories" : "the Category"}}?
+          </div>
+          <div class="profileFooter"  *ngIf ="viewModal">
+            <button class="footer-button" nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="handleDeleteCategoryCancel()"><span>Done</span></button>
+          </div>
+        </div>
+    </ng-template>
+  </nz-modal>
+  

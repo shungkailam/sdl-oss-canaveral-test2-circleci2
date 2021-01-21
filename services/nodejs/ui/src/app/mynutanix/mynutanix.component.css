@@ -1,0 +1,40 @@
+.noSherlockAccess{
+    width: 100vw;
+    height: 100vh;
+    background:#F2F4F6;
+    padding-top: calc(50vh - 200px);
+    padding-left: calc(50vw - 180px);
+}
+
+.error-container{
+    background: #FFFFFF;
+    box-shadow: 0 2px 5px 1px rgba(0,0,0,0.20);
+    height: 332px;
+    width: 360px;
+    padding: 40px 30px;
+}
+
+.error-title{
+    color: #22272E;
+    font-size: 29px;
+    text-align: left; 
+}
+
+.error-content{
+    color: #22272E;
+    font-size: 14px;
+    font-weight: normal;
+    text-align: left;
+    letter-spacing: 0;
+    line-height: 22px;
+    margin-top: 20px;
+}
+
+.error-link{
+    margin-top: 30px;
+}
+
+.error-link div{
+    cursor: pointer; 
+    color: #22a5f7;
+}

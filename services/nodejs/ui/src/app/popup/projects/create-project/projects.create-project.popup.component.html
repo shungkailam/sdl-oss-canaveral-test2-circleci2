@@ -1,0 +1,263 @@
+<div class="create-project-container">
+  <div class="item-a">
+    <div class="popup-title">{{projectId ? 'Update Project' : 'Create Project'}}</div>
+    <div (click)="onClosePopup()" class="icon-star close-div">
+      <i class="fulldetail-close-button" title="Back">
+        <svg viewBox="0 792 2048 2048" class="svg-icon  -id-K">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#K"></use>
+        </svg>
+      </i>
+    </div>
+  </div>
+  <div class="item-a2">
+    <div class="wide-steps-div">
+      <nz-steps [(nzCurrent)]="current">
+        <nz-step [nzTitle]="'General Information'" class="project-step-width"></nz-step>
+        <nz-step [nzTitle]="'Resources Assignment'"></nz-step>
+      </nz-steps>
+    </div>
+  </div>
+  <div class="item-b">
+    <div class="content">
+      <div *ngIf="current === 0">
+        <div class="content-title">Project Details</div>
+        <div class="input-group">
+          <div class="content-subtitle">Name</div>
+          <input [disabled]="_sherlockRole === ''" type="text" (keyup)="checkDuplicateName(projectName)" [(ngModel)]="projectName" maxlength="200" placeholder="Project Name" [ngClass]="{'error-border': duplicateNameFound}">
+          <div *ngIf="duplicateNameFound" class="error-style">
+            This project name is already used. Please try another name.
+          </div>
+        </div>
+        <div class="input-group">
+          <div class="content-subtitle">Description</div>
+          <textarea [disabled]="_sherlockRole === ''" [(ngModel)]="projectDescription" rows="4" maxlength="200" style="height: 95px; padding: 5px 10px;" class="project-description"></textarea>
+        </div>
+        <div class="content-title">Users</div>
+        <div class="input-group" style="margin-top: 5px;">
+          <div *ngIf="selectedUsersCopy.length === 0" class="center-item">
+            <div>No Users have been added yet.</div>
+            <div style="margin-top: 10px">
+                <button  nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="onOpenItemSelection('User')">
+                    <i class="anticon anticon-plus"></i>
+                    <span>Add Users</span>
+                </button>
+            </div>
+          </div>
+          <div *ngIf="selectedUsersCopy.length > 0">
+              <span>{{selectedUsersCopy.length}} {{selectedUsersCopy.length > 1 ? 'Users' : 'User'}} Selected</span>
+              <a *ngIf="_sherlockRole !== ''" (click)="onOpenItemSelection('User')" style="float: right">Edit</a>
+              <div class="modal-container">
+                  <div class="modal-item">
+                      <span class="modal-item-width">User</span>
+                      <span class="modal-item-width">Roles</span>
+                  </div>
+                  <div class="modal-item-container">
+                      <div *ngFor="let user of selectedUsersCopy" class="modal-item">
+                          <span class="modal-item-width">{{user.name}}</span>
+                          <span class="modal-item-width">{{user.role}}</span>
+                          <i *ngIf="_sherlockRole !== ''" class="item-delete-btn" (click)="_sherlockRole === '' ? false : removeUser(user)" title="Back" style="float: right">
+                              <svg viewBox="0 792 2048 2048" class="svg-icon  -id-K">
+                              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#K"></use>
+                              </svg>
+                          </i>
+                      </div>
+                  </div>
+              </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="current === 1">
+        <div class="content-title">Edge Selection</div>
+        <div class="content-subtitle" style="margin-bottom: 10px;">All the Resources associated with the selected Edge will be available for the Users of this project.</div>
+        <div style="margin-bottom: 5px;">Select Edges</div>
+        <nz-radio-group [(ngModel)]="edgeSelectionType" (ngModelChange)="updateAffectedEdge(edgeSelectionType)">
+          <label [nzDisabled]="_sherlockRole === ''" nz-radio [nzValue]="'category'">
+            <span>Select by Category</span>
+          </label>
+          <label [nzDisabled]="_sherlockRole === ''" nz-radio [nzValue]="'edge'">
+            <span>Select Individually</span>
+          </label>
+        </nz-radio-group>
+        <div style="margin: 10px 0 5px 0">{{matchedEdges.length}} Edges Selected</div>
+        <div *ngIf="edgeSelectionType === 'category'">
+          <div nz-row *ngFor="let ci of catInfos; let i = index">
+            <div nz-col [nzSpan]="10">
+              <div class="select-box">
+                <select [disabled]="_sherlockRole === ''" [(ngModel)]="ci.id" (ngModelChange)="onChangeSelectCategory(ci); updateAffectedEdge('category')" style="border-right: none;">
+                  <option value="" disabled selected>Category</option>
+                  <option *ngFor="let cat of categories" value="{{cat.id}}">
+                    {{cat.name}}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div nz-col [nzSpan]="10">
+              <div class="select-box">
+                <select [disabled]="_sherlockRole === ''" [(ngModel)]="ci.value" (ngModelChange)="updateAffectedEdge('category')">
+                  <option value="" disabled selected>Value</option>
+                  <option *ngFor="let cv of ci.values" value="{{cv}}">{{cv}}</option>
+                </select>
+              </div>
+            </div>
+            <div *ngIf="catInfos.length > 1 && _sherlockRole !== ''" nz-col [nzSpan]="1" class="close-container">
+              <i (click)="onClickCloseCategoryInfo(i); updateAffectedEdge('category');" class="anticon anticon-close cat-info-close"></i>
+            </div>
+          </div>
+          <div>
+            <button *ngIf="_sherlockRole !== ''"  nz-button (click)="onClickAddCategoryInfo(); updateAffectedEdge('category');" style="margin-top: 5px;">
+                <i class="anticon anticon-plus" style="color: #108ee9;"></i>
+            </button>
+          </div>
+        </div>
+        <div *ngIf="edgeSelectionType === 'edge'">
+          <div *ngIf="selectedEdgesCopy.length === 0" class="center-item">
+            <div>No Edges have been added yet.</div>
+            <div *ngIf="_sherlockRole !== ''" style="margin-top: 10px">
+                <button nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="onOpenItemSelection('Edge')">
+                    <i class="anticon anticon-plus"></i>
+                    <span>Add Edges</span>
+                </button>
+            </div>
+          </div>
+          <div *ngIf="selectedEdgesCopy.length > 0">
+            <div class="modal-container">
+                <div *ngIf="_sherlockRole !== ''" class="modal-item">
+                    <span class="modal-item-width">Edge</span>
+                    <a (click)="onOpenItemSelection('Edge')" style="float: right">Edit</a>
+                </div>
+                <div class="modal-item-container">
+                    <div *ngFor="let edge of selectedEdgesCopy" class="modal-item">
+                        <span class="modal-item-width" style="width: 600px;">{{edge.name}}</span>
+                        <i *ngIf="_sherlockRole !== ''" class="item-delete-btn" (click)="removeEdge(edge)" title="Back" style="float: right">
+                            <svg viewBox="0 792 2048 2048" class="svg-icon  -id-K">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#K"></use>
+                            </svg>
+                        </i>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="content-title" style="margin-top: 30px;">Cloud Profile Selection</div>
+        <div nz-row *ngFor="let cl of cloudInfo; let i = index">
+          <div nz-col [nzSpan]="20">
+            <div class="select-box">
+              <nz-select [nzDisabled] = "_sherlockRole !== ''? false : true" style="width: 587px;" [nzPlaceHolder]="'Select...'" [(ngModel)]="cloudInfo[i].id" (ngModelChange)="changeCloud()">
+                  <nz-option *ngFor="let c1 of clouds" [nzValue]="c1.id" [nzDisabled] = "c1.selected ? true : false" [nzLabel]="c1.name"></nz-option>
+              </nz-select>
+              <!--<select [disabled] = "_sherlockRole !== ''" [(ngModel)]="cloudInfo[i].id" (ngModelChange)="changeCloud()">
+                <option value="" disabled selected>Cloud Profile</option>
+                <option *ngFor="let c1 of clouds" value="{{c1.id}}" [disabled]="c1.selected">{{c1.name}}</option>
+              </select>-->
+            </div>
+          </div>
+          <div *ngIf="_sherlockRole !== ''" nz-col [nzSpan]="1" class="close-container">
+            <i (click)="onClickCloseCloudInfo(i);" class="anticon anticon-close cat-info-close"></i>
+          </div>
+        </div>
+        <div>
+          <button *ngIf="_sherlockRole !== ''" nz-button (click)="onClickAddCloud()" style="margin-top: 5px;">
+              <i class="anticon anticon-plus" style="color: #108ee9;"></i>
+          </button>
+        </div>
+
+        <div class="content-title" style="margin-top: 30px;">Container Registry Selection</div>
+        <div nz-row *ngFor="let con of containerInfo; let i = index">
+            <div nz-col [nzSpan]="20">
+              <div class="select-box">
+                <nz-select [nzDisabled] = "_sherlockRole !== ''? false : true" style="width: 587px;" [nzPlaceHolder]="'Select...'" [(ngModel)]="containerInfo[i].id" (ngModelChange)="changeContainer()">
+                    <nz-option *ngFor="let c of containers" [nzValue]="c.id" [nzDisabled] = "c.selected ? true : false" [nzLabel]="c.name"></nz-option>
+                </nz-select>
+              </div>
+            </div>
+            <div *ngIf="_sherlockRole !== ''" nz-col [nzSpan]="1" class="close-container">
+              <i (click)="onClickCloseContainerInfo(i);" class="anticon anticon-close cat-info-close"></i>
+            </div>
+          </div>
+          <div>
+            <button *ngIf="_sherlockRole !== ''" nz-button (click)="onClickAddContainer()" style="margin-top: 5px;">
+                <i class="anticon anticon-plus" style="color: #108ee9;"></i>
+            </button>
+          </div>
+      </div>
+    </div>
+  </div>
+  <div class="item-c">
+    <div style="float: right;">
+      <button *ngIf="current === 1" nz-button style="margin-left: 10px;" style="margin-left: 10px;" (click)="onBack()">
+        <span>Back</span>
+      </button>
+      <button *ngIf="current === 1 && _sherlockRole!==''" nz-button style="margin-left: 10px;" [disabled]="isCreateDisabled()" [nzType]="'primary'" [nzLoading]="isConfirmLoading"
+        (click)="onCreateProject()">
+        <span>{{isUpdate ? 'Update' : 'Create'}}</span>
+      </button>
+      <button *ngIf="current === 1 && _sherlockRole === ''" nz-button style="margin-left: 10px;" (click)="onClosePopup()" [nzType]="'primary'">
+          <span>Done</span>
+      </button>
+      <button *ngIf="current === 0" nz-button style="margin-left: 10px;" (click)="onClosePopup()">
+        <span>Cancel</span>
+      </button>
+      <button *ngIf="current === 0" nz-button [disabled]="isNextDisabled()" [nzType]="'primary'" style="margin-left: 10px;" (click)="onNext()">
+          <span>Next</span>
+        </button>
+    </div>
+  </div>
+</div>
+
+<nz-modal [nzVisible]="openModal" [nzTitle]="selectionType" [nzContent]="modalContent" (nzOnCancel)="selectItems(false)"
+  (nzOnOk)="selectItems(true)" [nzOkText]="'Collect Logs'" [nzCancelText]="'Cancel'" [nzFooter]="selectionFooter">
+    <ng-template #modalContent>
+        <div>
+          <span style="font-weight: 600; margin-right: 20px;">List of {{selectionType}}</span>
+          <span>{{selectionType === 'User' ? selectedUsers.length : selectedEdges.length}} of {{selectionType === 'User' ? allUsers.length : allEdges.length}} selected</span>
+        </div>
+        <div class="selection-container">
+           <div *ngIf="selectionType === 'User'">
+              <label nz-checkbox [(ngModel)]="selectAllUsers" (ngModelChange)="onSelectAllItems()" style="margin: 0 0 10px 10px;">
+                <span>{{selectionType}}</span>
+              </label>
+           </div>
+           <div *ngIf="selectionType === 'Edge'">
+              <label nz-checkbox [(ngModel)]="selectAllEdges" (ngModelChange)="onSelectAllItems()" style="margin: 0 0 10px 10px;">
+                <span>{{selectionType}}</span>
+              </label>
+           </div>
+           <div class="selection-search">
+              <input (keyup)="onFilterChange()" [(ngModel)]="searchVal" placeholder="Type to Filter..."/>
+              <div class="icon-search">
+                <svg viewBox="0 0 12 12">
+                  <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-search-alt"></use>
+                </svg>
+              </div>
+            </div>
+            <div class="selection-item-container">
+              <div *ngIf="selectionType === 'User'">
+                <div *ngFor="let user of users">
+                    <label nz-checkbox class="selection-item" [(ngModel)]="user.selected" (ngModelChange)="onSelectUser(user)">
+                      <span class="user-width-limit">{{user.name}}</span>
+                    </label>
+                </div>
+              </div>
+              <div *ngIf="selectionType === 'Edge'">
+                <div *ngFor="let edge of edges">
+                    <label nz-checkbox class="selection-item" [(ngModel)]="edge.selected" (ngModelChange)="onSelectEdge(edge)">
+                      <span>{{edge.name}}</span>
+                    </label>
+                </div>
+                </div>
+            </div>    
+        </div>   
+    </ng-template>
+    <ng-template #selectionFooter>
+        <div *ngIf="isUploading" style="float: right; margin: 3px 0 0 10px;">
+          <nz-spin></nz-spin>
+        </div>
+        <button nz-button (click)="selectItems(false)">
+          <span>Close</span>
+        </button>
+        <button nz-button [nzType]="'primary'" (click)="selectItems(true)" [disabled]="selectedUsers.length === 0">
+          <span>Done</span>
+        </button>
+    </ng-template>
+    </nz-modal>

@@ -1,0 +1,53 @@
+---
+# Source: minecraft/templates/secrets.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: minecraft-release-minecraft
+  labels:
+    app: minecraft-release-minecraft
+    chart: "minecraft-1.1.6"
+    release: "minecraft-release"
+    heritage: "Helm"
+type: Opaque
+data:
+  rcon-password: "Q0hBTkdFTUUh"
+---
+# Source: minecraft/templates/datadir-pvc.yaml
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: minecraft-release-minecraft-datadir
+  labels:
+    app: minecraft-release-minecraft
+    chart: "minecraft-1.1.6"
+    release: "minecraft-release"
+    heritage: "Helm"
+  annotations:
+    volume.alpha.kubernetes.io/storage-class: default
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: "1Gi"
+---
+# Source: minecraft/templates/minecraft-svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: minecraft-release-minecraft
+  labels:
+    app: minecraft-release-minecraft
+    chart: "minecraft-1.1.6"
+    release: "minecraft-release"
+    heritage: "Helm"
+spec:
+  type: LoadBalancer
+  ports:
+  - name: minecraft
+    port: 25565
+    targetPort: minecraft
+    protocol: TCP
+  selector:
+    app: minecraft-release-minecraft

@@ -1,0 +1,32 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: hostpath-test-deploy
+spec:
+  selector:
+    matchLabels:
+      app: hostpath-test-deploy
+  replicas: 1
+  revisionHistoryLimit: 0
+  serviceName: test-svc
+  template:
+    metadata:
+      labels:
+        app: hostpath-test-deploy
+    spec:
+      containers:
+      - name: hostpath-test-container
+        image: gcr.io/google_containers/busybox:1.24
+        command: ["/bin/sh", "-c", "while true; do date >> /mnt/dates; sleep 10; done"]
+        volumeMounts:
+          - name: hostpath-volume
+            mountPath: "/mnt"
+  volumeClaimTemplates:
+  - metadata:
+      name: hostpath-volume
+    spec:
+      storageClassName: system
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 2Gi

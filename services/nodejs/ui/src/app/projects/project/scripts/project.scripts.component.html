@@ -1,0 +1,102 @@
+<div class="right-panel">
+    <div *ngIf="data.length !== 0">
+      <div class="toolbar" style="padding-bottom:0px;">
+        <button nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="onClickUploadScript()">
+          <i class="anticon anticon-plus"></i>
+          <span>Add</span>
+        </button>
+        <button style="margin-left:10px;" *ngIf="_indeterminate || _allChecked && _displayData.length !== 0" nz-button [nzType]="'default'"
+          [nzSize]="'large'" [nzLoading]="isConfirmLoading" (click)="onClickRemoveTableRow()">
+          <i class="anticon anticon-close"></i>
+          <span>Remove</span>
+        </button>
+      </div>
+      <div class="table-container">
+        <nz-table #nzTable [nzDataSource]="data" [nzPageSize]="10" (nzDataChange)="_displayDataChange($event)" [nzCustomNoResult]="true"
+          (nzPageIndexChange)="_refreshStatus()" (nzPageSizeChange)="_refreshStatus()">
+          <thead nz-thead>
+            <tr>
+              <th nz-th [nzCheckbox]="true">
+                <label nz-checkbox [(ngModel)]="_allChecked" [nzIndeterminate]="_indeterminate" (ngModelChange)="_checkAll($event)">
+                </label>
+              </th>
+              <th nz-th *ngFor="let col of columns">
+                <span>{{col}}</span>
+                <nz-table-sort [(nzValue)]="sortMap[col]" (nzValueChange)="sort(col,$event)"></nz-table-sort>
+              </th>
+              <th nz-th></th>
+            </tr>
+          </thead>
+          <tbody nz-tbody>
+            <tr nz-tbody-tr *ngFor="let data of nzTable.data">
+              <td nz-td [nzCheckbox]="true">
+                <label nz-checkbox [(ngModel)]="data.checked" (ngModelChange)="_refreshStatus($event)">
+                </label>
+              </td>
+              <td (click)="onClickEntity(data)" nz-td class="width-limit">
+                <a>{{data.name}}</a>
+              </td>
+              <td nz-td class="width-limit">{{data.language}}</td>
+              <td nz-td class="width-limit">{{data.environment}}</td>
+              <td nz-td>{{data.associatedDs}}</td>
+              <td nz-td>{{data.lastModified}}</td>
+              <td nz-td class="categories-table-container-options-column">
+                <nz-popover [nzPlacement]="'leftTop'" [nzTrigger]="'hover'">
+                  <div nz-td nz-popover class="table-container-options"></div>
+                  <ng-template #nzTemplate>
+                    <div class="table-container-options-items">
+                      <nz-radio-group [(ngModel)]="_rowIndex" (ngModelChange)="_refreshStatus($event)" *ngFor="let option of tableRowEditingOptions; index as i">
+                          <p *ngIf = "i !== 1" nz-radio-button [nzValue]="data.id" [ngClass] ="data.disable && i ===2 ? 'disablebuttons': ''"(click)=option.action($event)>{{option.label}}</p>
+                      </nz-radio-group>
+                    </div>
+                  </ng-template>
+                </nz-popover>
+              </td>
+            </tr>
+          </tbody>
+          <div noResult>No Data</div>
+        </nz-table>
+      </div>
+    </div>
+    <div *ngIf="data.length === 0 && !isLoading" class="center-container">
+      <div class="center-item">
+        <div>No Scripts have been uploaded yet.</div>
+        <div style="margin-top: 20px">
+          <button nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="onClickUploadScript()">
+            <i class="anticon anticon-plus"></i>
+            <span>Add Script</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="data.length === 0 && isLoading" class="center-container">
+      <nz-spin></nz-spin>
+    </div>
+  </div>
+  <nz-modal [nzVisible]="isDeleteModalVisible" [nzTitle]="'Remove Script'" [nzContent]="modalContent" (nzOnCancel)="handleDeleteScriptCancel()"
+      (nzOnOk)="handleDeleteScriptOk()" [nzOkText]="'Remove'" [nzCancelText]="'Cancel'" [nzFooter]= "_dataStreamsCount != 0 || _dataSourcesCount !== 0 ? null : ''" [nzConfirmLoading]="isModalConfirmLoading">
+      <ng-template #modalContent>
+        <nz-alert  *ngIf ="_dataStreamsCount === 0 && _dataSourcesCount === 0" [nzType]="'warning'" [nzCloseable]="true" (nzOnClose)="onCloseAlert()" nzShowIcon>
+            <span alert-body>
+                <pre>Removing Script(s).</pre>
+              </span>
+        </nz-alert>
+        <nz-alert *ngIf ="_dataStreamsCount !== 0 || _dataSourcesCount !== 0" [nzType]="'error'" [nzCloseable]="true" (nzOnClose)="onCloseAlert()" nzShowIcon>
+            <span alert-body>
+                <pre>Cannot remove the Script(s). It can cause Data stream failure.</pre>
+              </span>
+        </nz-alert>
+        <div  *ngIf ="_dataStreamsCount === 0 || _dataSourcesCount === 0" nz-row [ngStyle]="{'margin-top': alertClosed ? '0' : '20px'}">Are you sure you want to remove {{ multipleScripts ? "these Scripts?" : "this Script?"}}</div>
+        <div *ngIf ="_dataStreamsCount !== 0 || _dataSourcesCount !== 0" nz-row [ngStyle]="{'margin-top': alertClosed ? '0' : '20px'}">
+          Removing these scripts may have implications over the following entities:
+          <ul class="bullet-list">
+            <li>{{_dataStreamsCount}} Data streams</li>
+            <li>{{_dataSourcesCount}} Data Sources</li>
+            <!--<li>2 Projects</li>-->
+          </ul>
+        </div>
+        <div class="removeScriptfooter"  *ngIf ="_dataStreamsCount !== 0 || _dataSourcesCount !== 0">
+          <button class="footer-button" nz-button [nzType]="'primary'" [nzSize]="'large'" (click)="handleDeleteScriptCancel()"><span>Done</span></button>
+        </div>
+      </ng-template>
+  </nz-modal>

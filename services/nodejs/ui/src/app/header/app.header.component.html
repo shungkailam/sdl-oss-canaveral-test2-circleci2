@@ -1,0 +1,163 @@
+<header>
+  <div class="header">
+    <div class="header-logo" style="display:block;" (click)="onClickLogo()">
+      <img src="assets/header-logo-pc.png" width="26" height="16" style="width:26px;height:16px;margin-top:5px;">
+    </div>
+    <div class="header-hamburger-button" [ngClass]="{'expanded': hamburgerExpanded}" (click)="onClickHamburger()">
+      <div class="header-hamburger-button-slice"></div>
+    </div>
+    <div class="header-search">
+      <div *ngIf='false' class="search-box" (click)="onClickSearchBox()" (clickOutside)="onClickedOutsideSearchBox()" [ngClass]="{'focused': focused}">
+        <div class="icon-search">
+          <svg viewBox="0 0 12 12">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-search-alt"></use>
+          </svg>
+        </div>
+        <div class="search-bubbles">
+          <!--<div class="search-bubble"><span>{{searchTerm}}</span></div>-->
+        </div>
+        <input type="text" [(ngModel)]="searchTerm" #searchbox (keyup.enter)="onSearchBoxEnter(searchbox.value)" (keyup)="onSearchBoxKey($event)"
+          class="search-input" [disabled]="!focused">
+
+        <div class="search-sgst" *ngIf="suggestions.length > 0">
+
+          <div *ngFor="let suggestion of suggestions; let i = index" class="search-sgst-item" [ngClass]="{'selected': i === selectedSuggestionIndex}"
+            (mouseover)="onMouseOverSuggestion(suggestion, i)" (click)="onClickSearchSuggestion(suggestion)">
+            <div class="search-sgst-icon">
+              <svg viewBox="0 0 12 12">
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-page"></use>
+              </svg>
+            </div>
+            <div class="search-sgst-content">
+              <div class="search-sgst-bubble">
+                <span class="search-sgst-text">{{suggestion.name}}</span>
+              </div>
+            </div>
+            <div class="spacer"></div>
+            <div class="search-sgst-info"></div>
+          </div>
+
+        </div>
+
+        <div class="clear-search">
+          <div class="clear-search-icon"></div>
+        </div>
+        <div class="icon-star icon-star-empty" data-hasqtip="1318" style="display: none;">
+          <svg viewBox="0 0 10 10">
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-star-empty"></use>
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div class="spacer"></div>
+    <nz-dropdown *ngIf="username !== ''" class="username-dropdown">
+      <a class="ant-dropdown-link" nz-dropdown>
+        {{username}}
+        <i class="anticon anticon-down"></i>
+      </a>
+      <ul nz-menu>
+        <li nz-menu-item *ngIf="showChangePassword">
+          <a (click)="onChangePassWord()">Change Password</a>
+        </li>
+        <li nz-menu-item>
+          <a (click)="onClickLogout()">Logout</a>
+        </li>
+      </ul>
+    </nz-dropdown>
+    <nz-modal [nzVisible]="changePasswordExpanded" class="changePassword" [nzTitle]="'Change Password'" [nzContent]="modalContent"
+  [nzOkText]="'Save'" [nzCancelText]="'Cancel'" (nzOnCancel)="clickChangePassword(false)" (nzOnOk)="clickChangePassword(false)" [nzFooter]="ChangePasswordFooter">
+    <ng-template #modalContent>
+        <div class="content">
+          <div>
+            <span>Current Password</span>
+          </div> 
+          <input type="password" maxlength=30 *ngIf="!showCurrPassword" [(ngModel)]="currPs" (ngModelChange)="checkCurrPassword
+          (currPs)" [ngClass]="{'error-border': !currPsMatch}">
+          <input type="text" maxlength=30 *ngIf="showCurrPassword" [(ngModel)]="currPs" (ngModelChange)="checkCurrPassword
+          (currPs)" [ngClass]="{'error-border': !currPsMatch}">
+          <label nz-checkbox [(ngModel)]="showCurrPassword" class="password">
+            <span>{{!showCurrPassword ? "Show" : "Hide"}}</span>
+          </label>
+          <div *ngIf="!currPsMatch" class="password-error">Password does not Match</div>
+          <div style="padding-top: 10px;">
+            <span>New Password</span> 
+          </div> 
+          <input type="password" maxlength=30 *ngIf="!showNewPassword" (keyup)="checkNewPassword(newPs, conPs)" [(ngModel)]="newPs" [ngClass]="{'error-border': newPasswordEmpty}">
+          <input type="text" maxlength=30 *ngIf="showNewPassword" (keyup)="checkNewPassword(newPs, conPs)" [(ngModel)]="newPs" [ngClass]="{'error-border': newPasswordEmpty}">
+          <label nz-checkbox [(ngModel)]="showNewPassword" class="password">
+            <span>{{!showNewPassword ? "Show" : "Hide"}}</span>
+          </label>
+          <div *ngIf="newPasswordEmpty" class="password-error">New Password cannot be empty</div>
+          <div style="padding-top: 10px;">
+            <span>Confirm New Password</span> 
+          </div> 
+          <input type="password" maxlength=30 *ngIf="!showConfirmPassword" (keyup)="checkNewPassword(newPs, conPs)" [(ngModel)]="conPs" [ngClass]="{'error-border': !newPasswordMatch}">
+          <input type="text" maxlength=30 *ngIf="showConfirmPassword" (keyup)="checkNewPassword(newPs, conPs)" [(ngModel)]="conPs" [ngClass]="{'error-border': !newPasswordMatch}">
+          <label nz-checkbox [(ngModel)]="showConfirmPassword" class="password">
+            <span>{{!showConfirmPassword ? "Show" : "Hide"}}</span>
+          </label>
+          <div *ngIf="!newPasswordMatch" class="password-error">Password does not match</div>
+        </div>
+    </ng-template>
+    <ng-template #ChangePasswordFooter>
+        <button nz-button (click)="clickChangePassword(false)" [disabled]="btnDisabled">
+          <span>Cancel</span>
+        </button>
+        <button nz-button [nzType]="'primary'" [disabled]="passwordChangeDisabled()" (click)="clickChangePassword(true)">
+          <span>Save</span>
+        </button>
+        <div style="margin-top: 10px; font-weight: 600;" *ngIf="changePasswordSuccess">
+          Password Changed. Please log in again!
+        </div>
+        <div style="margin-top: 10px; color: #900909; font-weight: 600;" *ngIf="changePasswordFail">
+          Password Change Failed.
+        </div>
+    </ng-template>
+    </nz-modal>
+  </div>
+</header>
+<nav class="nav-side-dropdown" (clickOutside)="onClickedOutsideNavMenu()" [ngStyle]="{'display': hamburgerExpanded ? 'flex' : 'none'}">
+  <div class="nav-column">
+    <div class="nav-group" style="padding-bottom: 0px !important; margin-bottom: 2px !important">
+      <div class="nav-item" (mouseover)="onMouseOverMenuItem(null)">
+        <a (click)="onClickSubMenu({url: 'dashboard'})">Dashboard</a>
+      </div>
+    </div>
+    <div class="nav-group">
+        <ul nz-menu [nzMode]="'inline'">
+          <li nz-menu-item><div class="nav-item"  (click)="onClickMenu({url: 'projects'})">Projects</div></li>
+          <li  *ngIf="_sherlockRole === '' || (_sherlockRole !== '' && _totalProjects !== 0)" nz-submenu  [nzOpen] = "_sherlockRole === ''" class="submenu-height">
+              <span title class="nav-item"> Code & Data</span>
+              <ul class="submenu" >
+                  <li nz-menu-item><div class="nav-item sub globalNav" (click)="onClickMenu({url: 'applications'})">Applications</div></li>
+                  <li nz-menu-item><div class="nav-item sub globalNav"  (click)="onClickMenu({url: 'datastreams'})">Data Streams</div></li>
+                  <li nz-menu-item><div class="nav-item sub globalNav"  (click)="onClickSubMenu({url: 'scripts'})">Scripts</div></li>
+                  <li nz-menu-item><div class="nav-item sub globalNav"  (click)="onClickSubMenu({url: 'runtime'})">Runtime Environments</div></li>
+              </ul>
+          </li>
+          <li *ngIf="_sherlockRole !== ''" nz-submenu  [nzOpen] = "_sherlockRole !== '' &&  _totalProjects === 0" class="submenu-height">
+              <span title class="nav-item"> Infrastructure</span>
+              <ul class="submenu">
+                  <li nz-menu-item><div class="nav-item sub" (click)="onClickSubMenu({url: 'edges'})">Edges</div></li>
+                  <li nz-menu-item><div class="nav-item sub"  (click)="onClickSubMenu({url: 'datasources'})">Data Sources</div></li>
+                  <li nz-menu-item><div class="nav-item  sub"  (click)="onClickMenu({url: 'categories'})">Categories</div></li>
+                  <li nz-menu-item><div class="nav-item sub"  (click)="onClickMenu({url: 'clouds'})">Cloud Profiles</div></li>
+                  <li nz-menu-item><div class="nav-item sub"  (click)="onClickMenu({url: 'container'})">Container Registry Profiles</div></li>
+                  <li nz-menu-item><div class="nav-item sub"  (click)="onClickMenu({url: 'users'})">Users</div></li>
+                  <li nz-menu-item><div class="nav-item sub"  (click)="onClickMenu({url: 'log'})">Logs</div></li>
+                  <li nz-menu-item><div class="nav-item sub"  (click)="onClickMenu({url: 'ota'})">Life Cycle Management</div></li>
+              </ul>
+          </li>
+        </ul>
+    </div>
+    <!--<div class="nav-group">
+      <div class="nav-item" (mouseover)="onMouseOverMenuItem(null)">
+        <img class="settings" src="assets/settings.png">
+        <a (click)="onClickMenu({url: 'settings'})">Settings</a>
+      </div>
+    </div>-->
+  </div>
+</nav>
+<main [ngClass]="{'pushed': hamburgerExpanded, 'main-container': true}">
+  <router-outlet></router-outlet>
+</main>

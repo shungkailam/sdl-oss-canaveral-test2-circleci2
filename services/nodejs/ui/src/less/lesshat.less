@@ -1,0 +1,303 @@
+//  * =========================================================== *
+//  <                            LESSHat                          >
+//  * =========================================================== *
+//
+// Made with Energy drinks in Prague, Czech Republic.
+// Handcrafted by Petr Brzek, lesshat.com
+// Works great with CSS Hat csshat.com
+
+// version: v3.0.2.1 (2015-09-25)
+
+// TABLE OF MIXINS:
+// align-content
+// align-items
+// align-self
+// animation
+// animation-delay
+// animation-direction
+// animation-duration
+// animation-fill-mode
+// animation-iteration-count
+// animation-name
+// animation-play-state
+// animation-timing-function
+// appearance
+// backface-visibility
+// background-clip
+// background-image
+// background-origin
+// background-size
+// blur
+// border-bottom-left-radius
+// border-bottom-right-radius
+// border-image
+// border-radius
+// border-top-left-radius
+// border-top-right-radius
+// box-shadow
+// box-sizing
+// brightness
+// calc
+// column-count
+// column-gap
+// column-rule
+// column-width
+// columns
+// contrast
+// display
+// drop-shadow
+// filter
+// flex
+// flex-basis
+// flex-direction
+// flex-grow
+// flex-shrink
+// flex-wrap
+// font-face
+// grayscale
+// hue-rotate
+// hyphens
+// invert
+// justify-content
+// keyframes
+// opacity
+// order
+// perspective
+// perspective-origin
+// placeholder
+// rotate
+// rotate3d
+// rotateX
+// rotateY
+// rotateZ
+// saturate
+// scale
+// scale3d
+// scaleX
+// scaleY
+// scaleZ
+// selection
+// sepia
+// size
+// skew
+// skewX
+// skewY
+// transform
+// transform-origin
+// transform-style
+// transition
+// transition-delay
+// transition-duration
+// transition-property
+// transition-timing-function
+// translate
+// translate3d
+// translateX
+// translateY
+// translateZ
+// user-select
+
+// stylelint-disable function-whitespace-after, function-name-case, function-comma-space-after, declaration-bang-space-before, unit-no-unknown, block-no-empty, selector-type-no-unknown
+
+// TODO: Remove everything that is meant for vendor specific syntax
+// and use unprefixed versions because Autoprefixer takes care of this
+
+.align-items(...) {
+  align-items: @arguments;
+}
+
+.align-self(...) {
+  align-self: @arguments;
+}
+
+.animation(...) {
+  animation: @arguments;
+}
+
+.animation-delay(...) {
+  animation-delay: @arguments;
+}
+
+.animation-direction(...) {
+  animation-direction: @arguments;
+}
+
+.animation-duration(...) {
+  animation-duration: @arguments;
+}
+
+.animation-name(...) {
+  animation-name: @arguments;
+}
+
+.animation-play-state(...) {
+  animation-play-state: @arguments;
+}
+
+.background-image(...) {
+  background-image: @arguments;
+}
+
+.border-radius(...) {
+  border-radius: @arguments;
+  background-clip: padding-box;
+}
+
+.box-shadow(...) {
+  box-shadow: @arguments;
+}
+
+.box-sizing(...) {
+  box-sizing: @arguments;
+}
+
+.display(...) {
+  display: @arguments;
+}
+
+.flex(...) {
+  flex: @arguments;
+}
+
+.flex-direction(...) {
+  flex-direction: @arguments;
+}
+
+.flex-grow(...) {
+  flex-grow: @arguments;
+}
+
+.flex-wrap(...) {
+  flex-wrap: @arguments;
+}
+
+.justify-content(...) {
+  justify-content: @arguments;
+}
+
+.keyframes(...) {
+  @process: ~`(function(e){function r(r,t,c){var i="}\n",u=n.split(/(^[a-zA-Z0-9-]+),/g),s=t+" "+u[1]+"{",o=["-webkit-","-moz-","-ms-",""];c?a.forEach(function(r){-1!==e.indexOf(r)&&(u[2]=u[2].replace(new RegExp(r,"g"),function(e){return c+e}))}):u[2]=u[2].replace(/{([^}]+)}/g,function(e,r){var t=r.split(";");t.forEach(function(e,r){a.forEach(function(n){-1!==e.indexOf(n)&&(t[r]="",o.forEach(function(a){t[r]+=e.trim().replace(new RegExp(n,"g"),function(e){return a+e})+";"}))})});var n=t.join(";").replace(/;;/g,";");return e.replace(r,n)}),s+=u[2]+i,"start"==r?e="0; }\n"+s:"startend"==r?e="0; } \n"+s.replace(i,""):e+="end"==r?s.replace(i,""):s}e=e||8121991;var t="@{state}",n=e;if(8121991==e)return e;var a=["animation","transform","filter"];switch(t){case"1":r("start","@-webkit-keyframes","-webkit-"),r(null,"@-moz-keyframes","-moz-"),r(null,"@-o-keyframes","-o-"),r("end","@keyframes");break;case"2":r("start","@-webkit-keyframes","-webkit-"),r(null,"@-moz-keyframes","-moz-"),r("end","@keyframes");break;case"3":r("start","@-webkit-keyframes","-webkit-"),r(null,"@-moz-keyframes","-moz-"),r("end","@-o-keyframes","-o-");break;case"4":r("start","@-webkit-keyframes","-webkit-"),r(null,"@-o-keyframes","-o-"),r("end","@keyframes");break;case"5":r("start","@-webkit-keyframes","-webkit-"),r("end","@-moz-keyframes","-moz-");break;case"6":r("start","@-webkit-keyframes","-webkit-"),r("end","@-o-keyframes","-o-");break;case"7":r("start","@-webkit-keyframes","-webkit-"),r("end","@keyframes");break;case"8":r("startend","@-webkit-keyframes","-webkit-");break;case"9":r("start","@-moz-keyframes","-moz-"),r(null,"@-o-keyframes","-o-"),r("end","@keyframes");break;case"10":r("start","@-moz-keyframes","-moz-"),r("end","@-o-keyframes","-o-");break;case"11":r("start","@-moz-keyframes","-moz-"),r("end","@keyframes");break;case"12":r("startend","@-moz-keyframes","-moz-");break;case"13":r("start","@-o-keyframes","-o-"),r("end","@keyframes");break;case"14":r("startend","@-o-keyframes","-o-");break;case"15":r("startend","@keyframes")}return e+="}\n.lh-dummy { -lh-property:0"})((function(){var e="@{arguments}";return e=e.replace(/^\[|\]$/g,"")})())`;
+  @state: 1;
+
+  lesshat-selector { -lh-property: @process; }
+}
+
+.opacity(...) {
+  opacity: @arguments;
+}
+
+.placeholder(@color:@dark_6, @element: 08121991) {
+  .inception (@arguments) when not (@element = 08121991) {
+    @{element}::placeholder {
+      color: @color;
+    }
+  }
+
+  .inception (@arguments) when (@element = 08121991) {
+    &::placeholder {
+      color: @color;
+    }
+  }
+
+  .inception(@arguments);
+}
+
+.rotate(...) {
+  transform: rotate(@arguments);
+}
+
+.scale(...) {
+  transform: scale(@arguments);
+}
+
+.size(@square) {
+  @unit: 'px';
+
+  .process(@square) when (ispixel(@square)), (isem(@square)), (ispercentage(@square)), (iskeyword(@square)) {
+    width: @square;
+    height: @square;
+  }
+
+  .process(@square) when not (ispixel(@square)) and not (isem(@square)) and not (ispercentage(@square)) and not (isstring(@square)) and not (iskeyword(@square)) {
+    width: ~`@{square} + @{unit}`;
+    height: ~`@{square} + @{unit}`;
+  }
+
+  .process(@square);
+}
+
+.size(@width, @height) {
+  @unit: 'px';
+
+  .process(@width, @height) when (ispixel(@width)), (isem(@width)), (ispercentage(@width)), (iskeyword(@width)) {
+    .kittens(@height) when (ispixel(@height)), (isem(@height)), (ispercentage(@height)), (iskeyword(@height)) {
+      width: @width;
+      height: @height;
+    }
+
+    .kittens(@height) when not (ispixel(@height)) and not (isem(@height)) and not (ispercentage(@height)) and not (iskeyword(@height)) {
+      width: @width;
+      height: ~`@{height} + @{unit}`;
+    }
+
+    .kittens(@height);
+  }
+
+  .process(@width, @height) when (ispixel(@height)), (isem(@height)), (ispercentage(@height)), (iskeyword(@height)) {
+    .kittens(@width) when (ispixel(@width)), (isem(@width)), (ispercentage(@width)), (iskeyword(@width)) {}
+
+    .kittens(@width) when not (ispixel(@width)) and not (isem(@width)) and not (ispercentage(@width)) and not (iskeyword(@width)) {
+      width: ~`@{width} + @{unit}`;
+      height: @height;
+    }
+
+    .kittens(@width);
+  }
+
+  .process(@width, @height) when not (ispixel(@width)) and not (isem(@width)) and not (ispercentage(@width)) and not (iskeyword(@width)) and not (ispixel(@height)) and not (isem(@height)) and not (ispercentage(@height)) and not (iskeyword(@height)) {
+    width: ~`@{width} + @{unit}`;
+    height: ~`@{height} + @{unit}`;
+  }
+
+  .process(@width, @height);
+}
+
+.transform(...) {
+  transform: @arguments;
+}
+
+.transform-origin(...) {
+  transform-origin: @arguments;
+}
+
+.transition(...) {
+  @process: ~`(function(e){e=e||"all 0 ease 0";var r=["-webkit-","-moz-","-o-",""],t=["column","transform","filter"],n=/(?:\d)(?:ms|s)/gi,a=/(?:\s|^)(\.?\d+\.?\d*)(?![^(]*\)|\w|%)/gi;/^[^, ]*,/.test(e)&&(e=e.replace(/(?:,)(?![^(]*\))/g,""));var c=e.split(/(?:,)(?![^(]*\))/g);return c.forEach(function(e,n){t.forEach(function(t){-1!==e.indexOf(t)&&(c[n]="",r.forEach(function(a,u){c[n]+=e.trim().replace(new RegExp(t,"g"),function(e){return a+e}),u<r.length-1&&(c[n]+=",")}))})}),e=c.join(","),n.test(e)||"0"===e||(e=e.replace(a,function(e){return e+=parseFloat(e,10)>10?"ms":"s"})),e})((function(){var e="@{arguments}";return e=e.replace(/^\[|\]$/g,"")})())`;
+
+  transition: @process;
+}
+
+.transition-delay(...) {
+  @process: ~`(function(e){e=e||"0";var r=/(?:\d)(?:ms|s)/gi,t=/(?:\s|^)(\.?\d+\.?\d*)(?![^(]*\)|\w|%|\.)/gi;return r.test(e)||"0"===e||(e=e.replace(t,function(e){return e+=parseFloat(e,10)>10?"ms":"s"})),e})((function(){var e="@{arguments}";return e=e.replace(/^\[|\]$/g,"")})())`;
+
+  transition-delay: @process;
+}
+
+.transition-duration(...) {
+  @process: ~`(function(e){e=e||"0";var r=/ms|s/gi,t=/(?:\s|^)(\.?\d+\.?\d*)(?![^(]*\)|\w|%|\.)/gi;return r.test(e)||"0"===e||(e=e.replace(t,function(e){return e+=parseFloat(e,10)>10?"ms":"s"})),e})((function(){var e="@{arguments}";return e=e.replace(/^\[|\]$/g,"")})())`;
+
+  transition-duration: @process;
+}
+
+.translate(...) {
+  transform: translate(@arguments);
+}
+
+.translate3d(...) {
+  transform: translate3d(@arguments);
+}
+
+.user-select(...) {
+  user-select: @arguments;
+}
+
+// stylelint-enable
