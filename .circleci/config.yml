@@ -13,6 +13,7 @@ jobs:
       NPM_REGISTRY: http://drt-ep-artifactory-dev-1.eng.nutanix.com:8081/artifactory/api/npm/canaveral-npm-virtual/
       JAVA_HOME: /usr/lib/jvm/java-8-openjdk-amd64
       CANAVERAL_BUILD_SYSTEM: golang
+      CANAVERAL_LANGUAGE_VERSION: 1.13
       CANAVERAL_PACKAGE_TOOLS: npm
       ENABLE_SECURITY_SCAN: 1
       BLACKDUCK_TARGET_SOURCE_PATH: 1
