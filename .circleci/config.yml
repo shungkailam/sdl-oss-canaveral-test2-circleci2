@@ -23,7 +23,7 @@ jobs:
       BLACKDUCK_OPTS: --detect.go.path=/home/circleci/project/.workspace/build-tools/golang-go1.14/go/bin/go
     steps:
     - checkout
-	path: ~/sdl-oss-canaveral-test-circleci2
+        path: ~/sdl-oss-canaveral-test-circleci2
     - run:
         name: Bootstrap Canaveral Certs
         command: |-
