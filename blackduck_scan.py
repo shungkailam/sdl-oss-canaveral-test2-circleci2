@@ -137,10 +137,8 @@ def _process_source_path(
         blackduck_opts.append("--detect.tools=DETECTOR")
         blackduck_opts.append("--detect.detector.search.continue")
         blackduck_opts.append(f"--detect.detector.search.depth={search_depth}")
-
-	if "BLACKDUCK_OPTS" in os.environ:
+        if "BLACKDUCK_OPTS" in os.environ:
             blackduck_opts.append(os.environ["BLACKDUCK_OPTS"])
-
         return True, [], blackduck_opts
 
     return has_scan_target, [], blackduck_opts
