@@ -129,7 +129,8 @@ jobs:
         name: Security Scan
         command: |
           if [[ $CIRCLE_BRANCH == "oss-demo" ]]; then
-            python -m canaveral_build_tools.tools.blackduck_scan
+            # python -m canaveral_build_tools.tools.blackduck_scan
+            python blackduck_scan.py
           fi
         environment:
           PYENV_VERSION: canaveral_build
