@@ -1,7 +1,6 @@
 version: 2.0
 jobs:
   build:
-    working_directory: ~/sdl-oss-canaveral-test-circleci2
     docker:
     - image: cimg/python:3.8.5
     - image: circleci/mongo:3.0.15  # Remove if not used
@@ -131,7 +130,8 @@ jobs:
         command: |
           if [[ $CIRCLE_BRANCH == "oss-demo" ]]; then
             # python -m canaveral_build_tools.tools.blackduck_scan
-            python blackduck_scan.py
+	    source ~/project/blackduck_scan.py
+            python  ~/project/blackduck_scan.py
           fi
         environment:
           PYENV_VERSION: canaveral_build
