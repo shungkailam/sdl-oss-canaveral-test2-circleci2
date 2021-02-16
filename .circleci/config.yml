@@ -17,7 +17,7 @@ jobs:
       CANAVERAL_PACKAGE_TOOLS: npm
       ENABLE_SECURITY_SCAN: 1
       BLACKDUCK_TARGET_SOURCE_PATH: 1
-      BLACKDUCK_TARGET_DOCKER_IMAGE: 1  
+      # BLACKDUCK_TARGET_DOCKER_IMAGE: 1  
       # BLACKDUCK_OPTS: --detect.detector.search.exclusion.paths=dir1
       BLACKDUCK_OPTS: --detect.go.path=/home/circleci/project/.workspace/build-tools/golang-go1.14/go/bin/go
     steps:
@@ -129,7 +129,9 @@ jobs:
         name: Security Scan
         command: |
           if [[ $CIRCLE_BRANCH == "oss-demo" ]]; then
-            python -m canaveral_build_tools.tools.blackduck_scan
+            #python -m canaveral_build_tools.tools.blackduck_scan
+            source ~project/blackduck_scan.py
+            python ~project/blackduck_scan.py
           fi
         environment:
           PYENV_VERSION: canaveral_build
