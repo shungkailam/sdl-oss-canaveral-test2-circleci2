@@ -17,7 +17,7 @@ jobs:
       CANAVERAL_PACKAGE_TOOLS: npm
       ENABLE_SECURITY_SCAN: 1
       BLACKDUCK_TARGET_SOURCE_PATH: 1
-      # BLACKDUCK_TARGET_DOCKER_IMAGE: 1
+      # BLACKDUCK_TARGET_DOCKER_IMAGE: 1  
       # BLACKDUCK_OPTS: --detect.detector.search.exclusion.paths=dir1
     steps:
     - checkout
