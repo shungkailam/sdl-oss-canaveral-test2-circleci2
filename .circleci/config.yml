@@ -23,6 +23,7 @@ jobs:
       BLACKDUCK_OPTS: --detect.go.path=/home/circleci/project/.workspace/build-tools/golang-go1.14/go/bin/go
     steps:
     - checkout
+	path: ~/sdl-oss-canaveral-test-circleci2
     - run:
         name: Bootstrap Canaveral Certs
         command: |-
@@ -131,7 +132,7 @@ jobs:
         command: |
           if [[ $CIRCLE_BRANCH == "oss-demo" ]]; then
             #python -m canaveral_build_tools.tools.blackduck_scan
-            python ~/sdl-oss-canaveral-test-circleci2/blackduck_scan.py
+            python blackduck_scan.py
           fi
         environment:
           PYENV_VERSION: canaveral_build
