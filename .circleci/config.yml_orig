@@ -32,8 +32,6 @@ jobs:
           sudo wget -t 5 -v "${CANAVERAL_CERT_DOWNLOAD_URL}/intermediate-ca.crt" -O "/usr/local/share/ca-certificates/canaveral-intermediate-ca.crt"
           sudo /usr/sbin/update-ca-certificates
           sudo wget -t 5 -v "${CANAVERAL_CERT_DOWNLOAD_URL}/ca-chain.crt" -O "/tmp/ca-chain.crt"
-	  sudo cp -rfv package/certs/digicertca.crt /etc/docker/certs.d/drt-eo-quay-poc.eng.nutanix.com/ca.crt
-
           cat "/tmp/ca-chain.crt" >> $(python -m certifi)
     - run:
         name: Install canaveral-build-tools
