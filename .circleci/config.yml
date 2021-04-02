@@ -1,8 +1,8 @@
 version: 2.0
 jobs:
   build:
-    docker:
-      - image: cimg/python:3.8.5
+    machine:
+      image: ubuntu-1604:202007-01
     resource_class: small
     environment:
       CANAVERAL_BUILD_SYSTEM: noop
