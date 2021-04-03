@@ -82,11 +82,13 @@ jobs:
           path: test-results
       - store_artifacts:
           path: coverage
+      - setup_remote_docker
       - run:
           name: Package
           command: python -m canaveral_build_tools.core.package
           environment:
             PYENV_VERSION: canaveral_build
+      - setup_remote_docker
       - run:
           name: canaveral deploy
           command: |-
@@ -95,6 +97,7 @@ jobs:
             python -m canaveral_build_tools.core.deploy
           environment:
             PYENV_VERSION: canaveral_build
+      - setup_remote_docker
       - store_artifacts:
           name: Archive build logs
           path: /tmp/canaveral_logs
